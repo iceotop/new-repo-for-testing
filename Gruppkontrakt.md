@@ -11,10 +11,10 @@
 ### 1b. Beslutsfattande
 
 - Beslutsfattande i gruppen ska föregås av en diskussion kring en möjlig lösning.
-  När någon i gruppen visar sig vara mest insatt i en fråga betyder inte det att vederbörande får bestämma åt gruppen.
-
+- När någon i gruppen visar sig vara mest insatt i en fråga betyder inte det att vederbörande får bestämma åt gruppen.
 - Röstning och majoritetsbeslut ska om möjligt undvikas.
   Om någon inte yttrar sig innan gruppen fattar beslut så räknas det som samtycke.
+- Det är varje gruppmedlems ansvar att aktivt delta i beslutsgången och yttra sig i frågor som rör gruppens arbete. Om någon inte är anträffbar inom rimlig tid innan gruppen fattar beslut så har gruppen rätt att fatta beslut i dennes frånvaro.
 
 ### 1c. Frånvaro från avstämningar eller gruppmöte
 
@@ -92,10 +92,12 @@
 - Deltagarna får ut mest och lär sig bäst genom att direkt och öppet diskutera varandras sätt att fungera i gruppen. Vi strävar efter en öppen och rak kommunikation där vi gör vårt yttersta för att visa respekt och inte kränka någon. En bra samtalsregel är att om man talar om någon som inte är närvarande så talar man på samma sätt som att personen varit närvarande.
 - Men det är också medlemmarnas ansvar att inte bli kränkta för att man inte alltid får exakt som man vill, utan försöka vara lyhörd till gruppens mål som är överordnad individens mål.
 
----
+## 4. Övrigt
+
+- Gruppen är öppen för att omförhandla kontraktet skulle en konflikt uppstå mellan gruppens och individens mål.
 
 Detta kontrakt har upprättats av följande gruppmedlemmar:
 Närvarande: Daniel Hertz, Gustav Skogström, Ismail Taletovic, Maria Hedkvist
 
-Version: 1.0
-Datum: 2023-09-26
+Version: 1.1
+Datum: 2023-09-27
