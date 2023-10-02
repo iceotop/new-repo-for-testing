@@ -1,6 +1,14 @@
+using api.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Configurate database - Sqlite
+builder.Services.AddDbContext<BookCircleContext>(
+    options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"))
+);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
