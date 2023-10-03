@@ -2,7 +2,7 @@ using System.Text.Json;
 using api.Models;
 
 namespace api.Data;
-public class SeedData
+public static class SeedData
 {
     public static async Task LoadBooksData(BookCircleContext context)
     {
@@ -13,7 +13,7 @@ public class SeedData
 
         if (context.Books.Any()) return;
 
-        var json = System.IO.File.ReadAllText("Data/json/books.json");
+        var json = File.ReadAllText("Data/json/books.json");
 
         var books = JsonSerializer.Deserialize<List<Book>>(json, options);
 
@@ -32,7 +32,7 @@ public class SeedData
 
         if (context.Events.Any()) return;
 
-        var json = System.IO.File.ReadAllText("Data/json/events.json");
+        var json = File.ReadAllText("Data/json/events.json");
 
         var events = JsonSerializer.Deserialize<List<Event>>(json, options);
 

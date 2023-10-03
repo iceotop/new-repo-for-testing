@@ -1,84 +1,82 @@
-{
-  "events": [
-    {
-      "EventId": 1,
-      "Title": "Mockingbird Discussion",
-      "Book": "To Kill a Mockingbird",
-      "Description": "Join us for a deep dive into Harper Lee's classic novel.",
-      "StartDate": "2023-11-01",
-      "EndDate": "2023-11-29"
-    },
-    {
-      "EventId": 2,
-      "Title": "1984 Analysis",
-      "Book": "1984",
-      "Description": "Exploring the themes of Orwell's dystopian world.",
-      "StartDate": "2023-11-30",
-      "EndDate": "2023-12-28"
-    },
-    {
-      "EventId": 3,
-      "Title": "Pride and Prejudice Tea Time",
-      "Book": "Pride and Prejudice",
-      "Description": "Discussing love, society, and manners with Jane Austen.",
-      "StartDate": "2023-12-29",
-      "EndDate": "2024-01-26"
-    },
-    {
-      "EventId": 4,
-      "Title": "Gatsby Night",
-      "Book": "The Great Gatsby",
-      "Description": "Reliving the roaring twenties with Fitzgerald.",
-      "StartDate": "2024-01-27",
-      "EndDate": "2024-02-24"
-    },
-    {
-      "EventId": 5,
-      "Title": "Moby Dick Reading Marathon",
-      "Book": "Moby Dick",
-      "Description": "A lengthy session reading through Melville's epic.",
-      "StartDate": "2024-02-25",
-      "EndDate": "2024-03-24"
-    },
-    {
-      "EventId": 6,
-      "Title": "Catcher in the Rye Therapy Hour",
-      "Book": "The Catcher in the Rye",
-      "Description": "Discussing the pains of growing up with Salinger.",
-      "StartDate": "2024-03-25",
-      "EndDate": "2024-04-22"
-    },
-    {
-      "EventId": 7,
-      "Title": "Brave New World Book Club",
-      "Book": "Brave New World",
-      "Description": "Diving into Huxley's vision of the future.",
-      "StartDate": "2024-04-23",
-      "EndDate": "2024-05-21"
-    },
-    {
-      "EventId": 8,
-      "Title": "Hobbit Day",
-      "Book": "The Hobbit",
-      "Description": "A fun-filled day with Tolkien's beloved characters.",
-      "StartDate": "2024-05-22",
-      "EndDate": "2024-06-19"
-    },
-    {
-      "EventId": 9,
-      "Title": "Fahrenheit 451 Fire Safety Day",
-      "Book": "Fahrenheit 451",
-      "Description": "Discussing Bradbury's novel and fire safety tips.",
-      "StartDate": "2024-06-20",
-      "EndDate": "2024-07-18"
-    },
-    {
-      "EventId": 10,
-      "Title": "Catch-22 Debate Night",
-      "Book": "Catch-22",
-      "Description": "Discussing the absurdities of war and life with Heller.",
-      "StartDate": "2024-07-19",
-      "EndDate": "2024-08-16"
-    }
-  ]
-}
+[
+  {
+    "Id": "11",
+    "Title": "Mockingbird Discussion",
+    "Book": "To Kill a Mockingbird",
+    "Description": "Join us for a deep dive into Harper Lee's classic novel.",
+    "StartDate": "2023-11-01",
+    "EndDate": "2023-11-29"
+  },
+  {
+    "Id": "12",
+    "Title": "1984 Analysis",
+    "Book": "1984",
+    "Description": "Exploring the themes of Orwell's dystopian world.",
+    "StartDate": "2023-11-30",
+    "EndDate": "2023-12-28"
+  },
+  {
+    "Id": "13",
+    "Title": "Pride and Prejudice Tea Time",
+    "Book": "Pride and Prejudice",
+    "Description": "Discussing love, society, and manners with Jane Austen.",
+    "StartDate": "2023-12-29",
+    "EndDate": "2024-01-26"
+  },
+  {
+    "Id": "14",
+    "Title": "Gatsby Night",
+    "Book": "The Great Gatsby",
+    "Description": "Reliving the roaring twenties with Fitzgerald.",
+    "StartDate": "2024-01-27",
+    "EndDate": "2024-02-24"
+  },
+  {
+    "Id": "15",
+    "Title": "Moby Dick Reading Marathon",
+    "Book": "Moby Dick",
+    "Description": "A lengthy session reading through Melville's epic.",
+    "StartDate": "2024-02-25",
+    "EndDate": "2024-03-24"
+  },
+  {
+    "Id": "16",
+    "Title": "Catcher in the Rye Therapy Hour",
+    "Book": "The Catcher in the Rye",
+    "Description": "Discussing the pains of growing up with Salinger.",
+    "StartDate": "2024-03-25",
+    "EndDate": "2024-04-22"
+  },
+  {
+    "Id": "17",
+    "Title": "Brave New World Book Club",
+    "Book": "Brave New World",
+    "Description": "Diving into Huxley's vision of the future.",
+    "StartDate": "2024-04-23",
+    "EndDate": "2024-05-21"
+  },
+  {
+    "Id": "18",
+    "Title": "Hobbit Day",
+    "Book": "The Hobbit",
+    "Description": "A fun-filled day with Tolkien's beloved characters.",
+    "StartDate": "2024-05-22",
+    "EndDate": "2024-06-19"
+  },
+  {
+    "Id": "19",
+    "Title": "Fahrenheit 451 Fire Safety Day",
+    "Book": "Fahrenheit 451",
+    "Description": "Discussing Bradbury's novel and fire safety tips.",
+    "StartDate": "2024-06-20",
+    "EndDate": "2024-07-18"
+  },
+  {
+    "Id": "20",
+    "Title": "Catch-22 Debate Night",
+    "Book": "Catch-22",
+    "Description": "Discussing the absurdities of war and life with Heller.",
+    "StartDate": "2024-07-19",
+    "EndDate": "2024-08-16"
+  }
+]

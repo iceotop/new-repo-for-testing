@@ -1,84 +1,82 @@
-{
-  "books": [
-    {
-      "Id": 1,
-      "Title": "To Kill a Mockingbird",
-      "Author": "Harper Lee",
-      "PublicationYear": 1960,
-      "Review": "A gripping tale of racial injustice in the American South.",
-      "IsRead": true
-    },
-    {
-      "Id": 2,
-      "Title": "1984",
-      "Author": "George Orwell",
-      "PublicationYear": 1949,
-      "Review": "A dystopian novel about totalitarianism and surveillance.",
-      "IsRead": false
-    },
-    {
-      "Id": 3,
-      "Title": "Pride and Prejudice",
-      "Author": "Jane Austen",
-      "PublicationYear": 1813,
-      "Review": "A classic romance novel about manners and marriage.",
-      "IsRead": true
-    },
-    {
-      "Id": 4,
-      "Title": "The Great Gatsby",
-      "Author": "F. Scott Fitzgerald",
-      "PublicationYear": 1925,
-      "Review": "A story of love, ambition, and the American dream.",
-      "IsRead": false
-    },
-    {
-      "Id": 5,
-      "Title": "Moby Dick",
-      "Author": "Herman Melville",
-      "PublicationYear": 1851,
-      "Review": "An epic tale of man versus nature.",
-      "IsRead": true
-    },
-    {
-      "Id": 6,
-      "Title": "The Catcher in the Rye",
-      "Author": "J.D. Salinger",
-      "PublicationYear": 1951,
-      "Review": "A story about adolescent alienation and loss of innocence.",
-      "IsRead": false
-    },
-    {
-      "Id": 7,
-      "Title": "Brave New World",
-      "Author": "Aldous Huxley",
-      "PublicationYear": 1932,
-      "Review": "A vision of a future driven by technological advancements.",
-      "IsRead": true
-    },
-    {
-      "Id": 8,
-      "Title": "The Hobbit",
-      "Author": "J.R.R. Tolkien",
-      "PublicationYear": 1937,
-      "Review": "A fantasy adventure about a hobbit's journey.",
-      "IsRead": false
-    },
-    {
-      "Id": 9,
-      "Title": "Fahrenheit 451",
-      "Author": "Ray Bradbury",
-      "PublicationYear": 1953,
-      "Review": "A dystopian novel about a future where books are burned.",
-      "IsRead": true
-    },
-    {
-      "Id": 10,
-      "Title": "Catch-22",
-      "Author": "Joseph Heller",
-      "PublicationYear": 1961,
-      "Review": "A satirical take on the absurdities of war.",
-      "IsRead": false
-    }
-  ]
-}
+[
+  {
+    "Id": "1",
+    "Title": "To Kill a Mockingbird",
+    "Author": "Harper Lee",
+    "PublicationYear": 1960,
+    "Review": "A gripping tale of racial injustice in the American South.",
+    "IsRead": true
+  },
+  {
+    "Id": "2",
+    "Title": "1984",
+    "Author": "George Orwell",
+    "PublicationYear": 1949,
+    "Review": "A dystopian novel about totalitarianism and surveillance.",
+    "IsRead": false
+  },
+  {
+    "Id": "3",
+    "Title": "Pride and Prejudice",
+    "Author": "Jane Austen",
+    "PublicationYear": 1813,
+    "Review": "A classic romance novel about manners and marriage.",
+    "IsRead": true
+  },
+  {
+    "Id": "4",
+    "Title": "The Great Gatsby",
+    "Author": "F. Scott Fitzgerald",
+    "PublicationYear": 1925,
+    "Review": "A story of love, ambition, and the American dream.",
+    "IsRead": false
+  },
+  {
+    "Id": "5",
+    "Title": "Moby Dick",
+    "Author": "Herman Melville",
+    "PublicationYear": 1851,
+    "Review": "An epic tale of man versus nature.",
+    "IsRead": true
+  },
+  {
+    "Id": "6",
+    "Title": "The Catcher in the Rye",
+    "Author": "J.D. Salinger",
+    "PublicationYear": 1951,
+    "Review": "A story about adolescent alienation and loss of innocence.",
+    "IsRead": false
+  },
+  {
+    "Id": "7",
+    "Title": "Brave New World",
+    "Author": "Aldous Huxley",
+    "PublicationYear": 1932,
+    "Review": "A vision of a future driven by technological advancements.",
+    "IsRead": true
+  },
+  {
+    "Id": "8",
+    "Title": "The Hobbit",
+    "Author": "J.R.R. Tolkien",
+    "PublicationYear": 1937,
+    "Review": "A fantasy adventure about a hobbit's journey.",
+    "IsRead": false
+  },
+  {
+    "Id": "9",
+    "Title": "Fahrenheit 451",
+    "Author": "Ray Bradbury",
+    "PublicationYear": 1953,
+    "Review": "A dystopian novel about a future where books are burned.",
+    "IsRead": true
+  },
+  {
+    "Id": "10",
+    "Title": "Catch-22",
+    "Author": "Joseph Heller",
+    "PublicationYear": 1961,
+    "Review": "A satirical take on the absurdities of war.",
+    "IsRead": false
+  }
+]

@@ -11,7 +11,7 @@ using api.Data;
 namespace Api.Data.Migrations
 {
     [DbContext(typeof(BookCircleContext))]
-    [Migration("20231003081513_InitialCreate")]
+    [Migration("20231003110329_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -22,9 +22,8 @@ namespace Api.Data.Migrations
 
             modelBuilder.Entity("api.Models.Book", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -51,9 +50,8 @@ namespace Api.Data.Migrations
 
             modelBuilder.Entity("api.Models.Event", b =>
                 {
-                    b.Property<int>("EventId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Book")
                         .IsRequired()
@@ -73,7 +71,7 @@ namespace Api.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("EventId");
+                    b.HasKey("Id");
 
                     b.ToTable("Events");
                 });

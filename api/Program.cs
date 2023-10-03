@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Seed the database...
-using var scope = app.Services.CreateAsyncScope();
+using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 
 try
