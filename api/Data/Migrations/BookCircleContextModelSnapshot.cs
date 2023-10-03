@@ -19,9 +19,8 @@ namespace Api.Data.Migrations
 
             modelBuilder.Entity("api.Models.Book", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -48,9 +47,8 @@ namespace Api.Data.Migrations
 
             modelBuilder.Entity("api.Models.Event", b =>
                 {
-                    b.Property<int>("EventId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Book")
                         .IsRequired()
@@ -70,7 +68,7 @@ namespace Api.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("EventId");
+                    b.HasKey("Id");
 
                     b.ToTable("Events");
                 });

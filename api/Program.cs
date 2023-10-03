@@ -17,6 +17,25 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Seed the database...
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+
+try
+{
+    var context = services.GetRequiredService<BookCircleContext>();
+    await context.Database.MigrateAsync();
+
+    //läs in i rätt ordning med hänsyn till beroende
+    await SeedData.LoadBooksData(context);
+    await SeedData.LoadEventsData(context);
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex.Message);
+    throw;
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
