@@ -30,9 +30,13 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<BookCircleContext>();
+    var userMgr = services.GetRequiredService<UserManager<UserModel>>();
+    var roleMgr = services.GetRequiredService<RoleManager<IdentityRole>>();
+
     await context.Database.MigrateAsync();
 
     //läs in i rätt ordning med hänsyn till beroende
+    await SeedData.LoadRolesAndUsers(userMgr, roleMgr);
     await SeedData.LoadBooksData(context);
     await SeedData.LoadEventsData(context);
 }
