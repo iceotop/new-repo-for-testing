@@ -8,7 +8,7 @@ using api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SQLitePCL;
+
 
 namespace Api.Controllers;
 
@@ -28,8 +28,10 @@ public class EventController : ControllerBase
         return Ok(await _context.Events.ToListAsync());
     }
 
+
+
     [HttpGet("{eventId}")]
-    public async Task<ActionResult<Event>> Get(int Id)
+    public async Task<ActionResult<Event>> Get(string Id)
     {
         var bookEvent = await _context.Events.FindAsync(Id);
         if (bookEvent == null)
@@ -65,7 +67,7 @@ public class EventController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<List<Event>>> Delete(int id )
+    public async Task<ActionResult<List<Event>>> Delete(string id)
     {
         var bookEvent = await _context.Events.FindAsync(id);
         if (bookEvent == null)
@@ -75,6 +77,17 @@ public class EventController : ControllerBase
 
         await _context.SaveChangesAsync();
         return Ok(await _context.Events.ToListAsync());
+    }
+
+    [HttpGet("details/{id}")]
+    public async Task<ActionResult<Event>> Details(string id)
+    {
+        var bookEvent = await _context.Events.FindAsync(id);
+        
+        if (bookEvent == null)
+            return NotFound("Event not found.");
+
+        return Ok(bookEvent);
     }
 
 }
