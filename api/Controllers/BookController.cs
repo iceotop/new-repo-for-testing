@@ -19,7 +19,7 @@ public class BookController : ControllerBase
 
     // Hämta enskild bok på ID
     [HttpGet("{id}")]
-    public async Task<ActionResult> GetById(int id)
+    public async Task<ActionResult> GetById(string id)
     {
         var result = await _context.Books.Select(b => new
         {
