@@ -1,4 +1,6 @@
 using api.Data;
+using api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BookCircleContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"))
 );
+
+builder.Services.AddIdentityCore<UserModel>()
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<BookCircleContext>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
