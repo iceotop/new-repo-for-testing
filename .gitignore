@@ -478,3 +478,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+api/bookCircle.db
+api/bookCircle.db-shm
+api/bookCircle.db-wal
