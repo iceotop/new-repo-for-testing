@@ -5,6 +5,9 @@
 
 .DS_Store
 .vscode
+api/bookCircle.db
+api/bookCircle.db-shm
+api/bookCircle.db-wal
 
 # User-specific files
 *.rsuser
