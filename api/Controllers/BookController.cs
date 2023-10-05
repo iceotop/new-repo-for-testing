@@ -1,6 +1,7 @@
 using api.Data;
 using api.Models;
 using api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,8 @@ public class BookController : ControllerBase
 
     // Hämta enskild bok på ID
     [HttpGet("{id}")]
+    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User, Admin")] - Om man vill lägga till flera roller
     public async Task<ActionResult> GetById(string id)
     {
         var result = await _context.Books.Select(b => new

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -10,9 +11,11 @@ using api.Data;
 namespace Api.Data.Migrations
 {
     [DbContext(typeof(BookCircleContext))]
-    partial class BookCircleContextModelSnapshot : ModelSnapshot
+    [Migration("20231004112702_AddedIdentitySupport")]
+    partial class AddedIdentitySupport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -154,9 +157,6 @@ namespace Api.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("EventId")
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("IsRead")
                         .HasColumnType("INTEGER");
 
@@ -172,8 +172,6 @@ namespace Api.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EventId");
 
                     b.ToTable("Books");
                 });
@@ -204,20 +202,6 @@ namespace Api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("api.Models.Book", b =>
-                {
-                    b.HasOne("api.Models.Event", "Event")
-                        .WithMany("Books")
-                        .HasForeignKey("EventId");
-
-                    b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("api.Models.Event", b =>
-                {
-                    b.Navigation("Books");
                 });
 
             modelBuilder.Entity("api.Models.UserModel", b =>
