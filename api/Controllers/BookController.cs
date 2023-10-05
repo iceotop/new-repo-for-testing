@@ -61,4 +61,20 @@ public class BookController : ControllerBase
         }
         return StatusCode(500, "Internal Server Error");
     }
+
+    [HttpPatch("{bookId}/{eventId}")]
+    public async Task<ActionResult> AddToEvent(string bookId, string eventId)
+    {
+        var book = await _context.Books.FindAsync(bookId);
+        if (book is null) return NotFound($"Boken med ID {bookId} kunde inte hittas");
+
+        book.EventId = eventId;
+        _context.Books.Update(book);
+
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+        return StatusCode(500, "Internal Server Error");
+    }
 }

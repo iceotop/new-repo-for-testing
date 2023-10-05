@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Models;
+using api.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,15 +29,29 @@ public class EventController : ControllerBase
         return Ok(await _context.Events.ToListAsync());
     }
 
-
-
-    [HttpGet("{eventId}")]
-    public async Task<ActionResult<Event>> Get(string Id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Event>> Get(string id)
     {
-        var bookEvent = await _context.Events.FindAsync(Id);
-        if (bookEvent == null)
-            return BadRequest("Event not found.");
-        return Ok(bookEvent);
+        var result = await _context.Events
+            .Where(e => e.Id == id)
+            .Select(e => new EventBaseViewModel
+            {
+                Title = e.Title,
+                Description = e.Description,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+                Books = e.Books!.Select(
+                    b => new BookBaseViewModel
+                    {
+                        Title = b.Title,
+                        Author = b.Author,
+                        PublicationYear = b.PublicationYear,
+                        Review = b.Review,
+                        IsRead = b.IsRead
+                    }
+                ).ToList()
+            }).SingleOrDefaultAsync();
+        return Ok(result);
     }
 
     [HttpPost]
@@ -83,7 +98,7 @@ public class EventController : ControllerBase
     public async Task<ActionResult<Event>> Details(string id)
     {
         var bookEvent = await _context.Events.FindAsync(id);
-        
+
         if (bookEvent == null)
             return NotFound("Event not found.");
 

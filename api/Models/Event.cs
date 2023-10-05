@@ -12,4 +12,7 @@ public class Event
     public DateTime EndDate { get; set; }
     
     public ICollection<UserEvent> UserEvents { get; set; }
+
+    // Many-side
+    public ICollection<Book>? Books { get; set; }
 }
