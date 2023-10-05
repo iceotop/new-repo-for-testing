@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace api.Models;
 
 public class Book
@@ -8,4 +10,10 @@ public class Book
     public int PublicationYear { get; set; }
     public string Review { get; set; }
     public bool IsRead { get; set; }
+
+
+    // One-side
+    public string? EventId { get; set; }
+    [ForeignKey("EventId")]
+    public Event? Event { get; set; }
 }
