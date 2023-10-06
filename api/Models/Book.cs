@@ -18,4 +18,8 @@ public class Book
     public string? EventId { get; set; }
     [ForeignKey("EventId")]
     public Event? Event { get; set; }
+
+    public string? UserModelId { get; set; }
+    [ForeignKey("UserModelId")]
+    public UserModel? User { get; set; }
 }

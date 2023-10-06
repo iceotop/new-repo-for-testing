@@ -4,6 +4,7 @@ using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace api.Controllers;
 
@@ -125,6 +126,23 @@ public class BookController : ControllerBase
         if (existingBook is null) return NotFound($"Bok ({id}) kunde inte hittas");
 
         _context.Books.Remove(existingBook);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+        return StatusCode(500, "Internal Server Error");
+    }
+
+    // TODO Det här ska egentligen ligga i Post-metoden men ligger här för test
+    [HttpPatch("{bookId}/{userId}")]
+    public async Task<IActionResult> AddToLibrary(string bookId, string userId)
+    {
+        var book = await _context.Books.FindAsync(bookId);
+        if (book is null) return NotFound($"Boken med ID {bookId} kunde inte hittas");
+
+        book.UserModelId = userId;
+        _context.Books.Update(book);
+
         if (await _context.SaveChangesAsync() > 0)
         {
             return NoContent();
