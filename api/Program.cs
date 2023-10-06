@@ -12,6 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddHttpClient("GoogleBooks", c =>
+    {
+        c.BaseAddress = new Uri("https://www.googleapis.com/books/v1/");
+    });
+
 // Configurate database - Sqlite
 builder.Services.AddDbContext<BookCircleContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"))
