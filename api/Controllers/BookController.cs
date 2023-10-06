@@ -18,6 +18,17 @@ public class BookController : ControllerBase
         _context = context;
     }
 
+    // Display all books
+    [HttpGet]
+    public IActionResult ListAllBooks()
+    {
+        var list = _context.Books.ToList();
+
+        if (list is []) return NotFound($"Böcker kunde inte hittas");
+
+        return Ok(list);
+    }
+
     // Hämta enskild bok på ID
     [HttpGet("{id}")]
     [Authorize(Roles = "User")]
@@ -40,7 +51,7 @@ public class BookController : ControllerBase
         return Ok(result);
     }
 
-    // Lägg till ny bok
+    // Add a new book
     [HttpPost()]
     public async Task<ActionResult> Create(BookBaseViewModel model)
     {
@@ -62,8 +73,31 @@ public class BookController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
+    // Edit a book
+    [HttpPut("{id}")]
+    public async Task<IActionResult> EditBook(string id, [FromBody] Book updatedBook)
+    {
+        var existingBook = await _context.Books.FindAsync(id);
+
+        if (existingBook is null) return NotFound($"Bok ({id}) finns inte i systemet");
+
+        existingBook.Title = updatedBook.Title;
+        existingBook.Author = updatedBook.Author;
+        existingBook.PublicationYear = updatedBook.PublicationYear;
+        existingBook.Review = updatedBook.Review;
+        existingBook.IsRead = updatedBook.IsRead;
+
+        _context.Books.Update(existingBook);
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return Ok(existingBook);
+        }
+        return StatusCode(500, "Internal Server Error");
+    }
+
+    // Add a book to an event
     [HttpPatch("{bookId}/{eventId}")]
-    public async Task<ActionResult> AddToEvent(string bookId, string eventId)
+    public async Task<IActionResult> AddToEvent(string bookId, string eventId)
     {
         var book = await _context.Books.FindAsync(bookId);
         if (book is null) return NotFound($"Boken med ID {bookId} kunde inte hittas");
@@ -71,6 +105,22 @@ public class BookController : ControllerBase
         book.EventId = eventId;
         _context.Books.Update(book);
 
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+        return StatusCode(500, "Internal Server Error");
+    }
+
+    // Remove a book
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> RemoveBook(string id)
+    {
+        var existingBook = await _context.Books.FindAsync(id);
+
+        if (existingBook is null) return NotFound($"Bok ({id}) kunde inte hittas");
+
+        _context.Books.Remove(existingBook);
         if (await _context.SaveChangesAsync() > 0)
         {
             return NoContent();
