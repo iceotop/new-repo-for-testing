@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Data;
 using api.Models;
 using api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 
 namespace Api.Controllers;
 
-[Route("EventController")]
+[Route("api/v1/events")]
 [ApiController]
 public class EventController : ControllerBase
 {
@@ -23,6 +18,7 @@ public class EventController : ControllerBase
         _context = context;
     }
 
+    // TODO Här skulle vi behöva fixa en ViewModel
     [HttpGet]
     public async Task<ActionResult<List<Event>>> Get()
     {
@@ -30,6 +26,7 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "User")]
     public async Task<ActionResult<Event>> Get(string id)
     {
         var result = await _context.Events
@@ -55,6 +52,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "User")]
     public async Task<ActionResult<List<Event>>> Add(Event newEvent)
     {
         _context.Events.Add(newEvent);
@@ -64,6 +62,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Roles = "User")]
     public async Task<ActionResult<List<Event>>> Update(Event request)
     {
         var bookEvent = await _context.Events.FindAsync(request.Id);
@@ -82,6 +81,7 @@ public class EventController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<List<Event>>> Delete(string id)
     {
         var bookEvent = await _context.Events.FindAsync(id);
@@ -95,6 +95,7 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("details/{id}")]
+    [Authorize(Roles = "User")]
     public async Task<ActionResult<Event>> Details(string id)
     {
         var bookEvent = await _context.Events.FindAsync(id);
