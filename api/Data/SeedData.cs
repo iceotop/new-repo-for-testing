@@ -23,10 +23,10 @@ public static class SeedData
         {
             var admin = new UserModel
             {
-                UserName = "daniels@mail.com",
-                Email = "daniels@mail.com",
-                FirstName = "Daniel",
-                LastName = "Hertz",
+                UserName = "musses@mail.com",
+                Email = "musses@mail.com",
+                FirstName = "Musse",
+                LastName = "Pigg",
             };
 
             await userManager.CreateAsync(admin, "Pa$$w0rd");
