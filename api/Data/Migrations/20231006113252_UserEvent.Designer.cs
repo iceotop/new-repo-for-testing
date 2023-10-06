@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -10,9 +11,11 @@ using api.Data;
 namespace Api.Data.Migrations
 {
     [DbContext(typeof(BookCircleContext))]
-    partial class BookCircleContextModelSnapshot : ModelSnapshot
+    [Migration("20231006113252_UserEvent")]
+    partial class UserEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.11");
@@ -186,14 +189,9 @@ namespace Api.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserModelId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
-
-                    b.HasIndex("UserModelId");
 
                     b.ToTable("Books");
                 });
@@ -368,21 +366,10 @@ namespace Api.Data.Migrations
                         .WithMany("Books")
                         .HasForeignKey("EventId");
 
-                    b.HasOne("api.Models.UserModel", "User")
-                        .WithMany("Books")
-                        .HasForeignKey("UserModelId");
-
                     b.Navigation("Event");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("api.Models.Event", b =>
-                {
-                    b.Navigation("Books");
-                });
-
-            modelBuilder.Entity("api.Models.UserModel", b =>
                 {
                     b.Navigation("Books");
                 });

@@ -11,7 +11,7 @@ public class Event
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     
-    public ICollection<UserEvent> UserEvents { get; set; }
+    public ICollection<UserModel> Users { get; set; } = new List<UserModel>();
 
     // Many-side
     public ICollection<Book>? Books { get; set; }
