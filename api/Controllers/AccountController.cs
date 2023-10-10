@@ -1,8 +1,12 @@
+using api.Data;
 using api.Models;
 using api.Services;
+using api.ViewModels;
 using api.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 
 namespace api.Controllers;
 [ApiController]
@@ -11,10 +15,14 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
     private readonly TokenService _tokenService;
-    public AccountController(UserManager<UserModel> userManager, TokenService tokenService)
+    private readonly BookCircleContext _context;
+
+    public AccountController(UserManager<UserModel> userManager, TokenService tokenService, BookCircleContext context)
     {
         _tokenService = tokenService;
         _userManager = userManager;
+        _context = context;
+
     }
 
     [HttpPost("login")]
@@ -60,5 +68,31 @@ public class AccountController : ControllerBase
         await _userManager.AddToRoleAsync(user, "User");
         //fusk - ändra return?
         return StatusCode(201);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> Get(string id)
+    {
+        var result = await _context.Users
+            .Where(u => u.Id == id)
+            .Include(u => u.Books)
+            .SingleOrDefaultAsync();
+
+        var user = new ProfileViewModel
+        {
+            FirstName = result.FirstName,
+            LastName = result.LastName,
+            Books = result.Books!.Select(
+                b => new BookBaseViewModel
+                {
+                    Title = b.Title,
+                    Author = b.Author,
+                    PublicationYear = b.PublicationYear,
+                    Review = b.Review,
+                    IsRead = b.IsRead
+                }
+            ).ToList()
+        };
+        return Ok(user);
     }
 }

@@ -116,6 +116,25 @@ public class BookController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
+    [HttpPatch("addtolibrary/{bookId}/{userId}")]
+    public async Task<IActionResult> AddToLibrary(string bookId, string userId)
+    {
+        var book = await _context.Books.FindAsync(bookId);
+        if (book is null) return NotFound($"Boken med ID {bookId} kunde inte hittas");
+
+        var user = await _context.Users.FindAsync(userId);
+        if (user is null) return NotFound($"Användare med ID {userId} kunde inte hittas");
+
+        user.Books.Add(book);
+        _context.Users.Update(user);
+
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+        return StatusCode(500, "Internal Server Error");
+    }
+
     // Remove a book
     [HttpDelete("{id}")]
     [Authorize(Roles = "User")]
