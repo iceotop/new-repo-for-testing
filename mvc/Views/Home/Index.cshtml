@@ -1,1 +1,26 @@
-﻿ <h1>Detta är vår front page.</h1>
+﻿ <h1 id="opening-title">Detta är vår front page.</h1>
+
+<h2>Steg 1: Search här (kom ihåg att köra både mvc och api på samma gång så dem kommunicerar och resultat poppar upp här)</h2>
+<div id="searchModal" class="modal">
+  <form id="search-form">
+    <input type="text" id="search-input" placeholder="Search for books...">
+  </form>
+  <div id="resultsDropdown" class="dropdown"></div>
+</div>
+
+<h2>Steg 2: Nedantill är formulär för att sätta bok i bibliotek.</h2>
+<h2>(OBS:  Alla fält kommer att vara auto-ifyllda när du valt bok från search results förutom recension-delen. *fungerar inte än)</h2>
+ <div id="formModal" class="modal">
+  <form id="bookForm">
+    <img id="bookImage" src="" alt="bokbild hamnar här"/>
+    <input type="text" id="bookTitle" placeholder="titel (automatiskt ifylld)" readonly>
+    <input type="text" id="bookYear" placeholder="år (automatiskt ifylld)" readonly>
+    <input type="text" id="bookAuthor" placeholder="författare (automatiskt ifylld)" readonly>
+    <textarea id="bookReview" placeholder="Write your review here (valfritt)"></textarea>
+    <input type="radio" id="haveRead" name="readStatus" value="Have read">
+    <label for="haveRead">Have read</label>
+    <input type="radio" id="wantToRead" name="readStatus" value="Want to read" checked>
+    <label for="wantToRead">Want to read</label>
+    <button type="submit">Submit</button>
+  </form>
+</div>
