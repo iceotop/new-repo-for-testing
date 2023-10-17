@@ -95,4 +95,21 @@ public class AccountController : ControllerBase
         };
         return Ok(user);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user is null)
+        {
+            return NotFound($"Vi kan inte hitta en användare med id{id}");
+        }
+
+        var result = await _userManager.DeleteAsync(user);
+        if (result.Succeeded)
+        {
+            return NoContent();
+        }
+        return StatusCode(500, "Internal Server Error");
+    }
 }

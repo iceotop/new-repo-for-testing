@@ -22,6 +22,7 @@ builder.Services.AddDbContext<BookCircleContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"))
 );
 
+
 builder.Services.AddIdentityCore<UserModel>()
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<BookCircleContext>();
@@ -33,7 +34,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Från Michaels program.cs
+// JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
