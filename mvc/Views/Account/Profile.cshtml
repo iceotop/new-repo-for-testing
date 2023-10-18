@@ -1,0 +1,10 @@
+@model mvc.ViewModels.Account.ProfileViewModel
+
+<section class="page-content">
+    <h1>@Model.FirstName @Model.LastName</h1>
+    <ul>
+        @foreach (var book in Model.Books){
+            <li>@book.Title</li>
+        }
+    </ul>
+</section>
