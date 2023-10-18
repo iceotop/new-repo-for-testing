@@ -22,30 +22,49 @@ builder.Services.AddDbContext<BookCircleContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"))
 );
 
-builder.Services.AddIdentityCore<UserModel>()
-.AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<BookCircleContext>();
+// Set up Identity to use cookies and BookCircleContext
+builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
 
-builder.Services.AddScoped<TokenService>();
+    options.Lockout.MaxFailedAccessAttempts = 5;
+
+    options.User.RequireUniqueEmail = true;
+}).AddEntityFrameworkStores<BookCircleContext>();
+
+// Configure cookies
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/account/login";
+});
+
+// Setup av JWT
+// builder.Services.AddIdentityCore<UserModel>()
+// .AddRoles<IdentityRole>()
+// .AddEntityFrameworkStores<BookCircleContext>();
+// builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Från Michaels program.cs
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("tokenSettings:tokenKey").Value))
-        };
-    });
+
+// Setup av JWT
+// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuer = false,
+//             ValidateAudience = false,
+//             ValidateLifetime = true,
+//             ValidateIssuerSigningKey = true,
+//             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("tokenSettings:tokenKey").Value))
+//         };
+//     });
 
 builder.Services.AddAuthorization();
 
@@ -64,7 +83,6 @@ try
 
     await context.Database.MigrateAsync();
 
-    //läs in i rätt ordning med hänsyn till beroende
     await SeedData.LoadRolesAndUsers(userMgr, roleMgr);
     await SeedData.LoadBooksData(context);
     await SeedData.LoadEventsData(context);
@@ -82,7 +100,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
