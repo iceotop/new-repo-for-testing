@@ -14,12 +14,15 @@ namespace api.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
-    private readonly TokenService _tokenService;
+    private readonly SignInManager<UserModel> _signInManager;
+    // private readonly TokenService _tokenService; - JWT
     private readonly BookCircleContext _context;
 
-    public AccountController(UserManager<UserModel> userManager, TokenService tokenService, BookCircleContext context)
+    // public AccountController(UserManager<UserModel> userManager, TokenService tokenService, BookCircleContext context) - JWT
+    public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager, BookCircleContext context)
     {
-        _tokenService = tokenService;
+        // _tokenService = tokenService; - JWT
+        _signInManager = signInManager;
         _userManager = userManager;
         _context = context;
 
@@ -38,7 +41,8 @@ public class AccountController : ControllerBase
         return Ok(new UserViewModel
         {
             Email = user.Email,
-            Token = await _tokenService.CreateToken(user)
+
+            // Token = await _tokenService.CreateToken(user) -JWT
         });
     }
 
@@ -66,7 +70,7 @@ public class AccountController : ControllerBase
         }
 
         await _userManager.AddToRoleAsync(user, "User");
-        //fusk - ändra return?
+
         return StatusCode(201);
     }
 
