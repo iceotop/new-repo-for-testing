@@ -1,26 +1,44 @@
-﻿ <h1 id="opening-title">Detta är vår front page.</h1>
+﻿<div id="bookCircleContainer" class="half-container"></div>
+<div id="bookReviewContainer" class="half-container"></div>
 
-<h2>Steg 1: Search här (kom ihåg att köra både mvc och api på samma gång så dem kommunicerar och resultat poppar upp här)</h2>
-<div id="searchModal" class="modal">
-  <form id="search-form">
-    <input type="text" id="search-input" placeholder="Search for books...">
-  </form>
-  <div id="resultsDropdown" class="dropdown"></div>
+<!-- Modal overlay -->
+<div class="modal-overlay"></div>
+
+<!-- Modal 1 -->
+<div id="modal1" class="modal">
+
+  <button class="close-button" id="closeModal1">X</button>
+  <div class="form-wrapper"> <!-- New wrapper div -->
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Search for book...">
+    </form>
+    <div id="resultsDropdown" class="dropdown"></div>
+  </div>
+
 </div>
 
-<h2>Steg 2: Nedantill är formulär för att sätta bok i bibliotek.</h2>
-<h2>(OBS:  Alla fält kommer att vara auto-ifyllda när du valt bok från search results förutom recension-delen. *fungerar inte än)</h2>
- <div id="formModal" class="modal">
-  <form id="bookForm">
-    <img id="bookImage" src="" alt="bokbild hamnar här"/>
-    <input type="text" id="bookTitle" placeholder="titel (automatiskt ifylld)" readonly>
-    <input type="text" id="bookYear" placeholder="år (automatiskt ifylld)" readonly>
-    <input type="text" id="bookAuthor" placeholder="författare (automatiskt ifylld)" readonly>
-    <textarea id="bookReview" placeholder="Write your review here (valfritt)"></textarea>
-    <input type="radio" id="haveRead" name="readStatus" value="Have read">
-    <label for="haveRead">Have read</label>
-    <input type="radio" id="wantToRead" name="readStatus" value="Want to read" checked>
-    <label for="wantToRead">Want to read</label>
-    <button type="submit">Submit</button>
-  </form>
+<!-- Modal 2 -->
+<div id="modal2" class="modal">
+  
+    <button class="close-button" id="closeModal2">X</button>
+
+    <div id="formContainer" class="modal-content">
+      <img id="bookImage" src="" alt="bokbild hamnar här"/>
+      <form id="bookForm">
+        <div class="book-metadata">
+          <div id="bookTitle"></div>
+          <div id="bookYear"></div>
+          <div id="bookAuthor"></div>
+        </div>
+        <textarea id="bookReview" placeholder="Write your review here (optional)"></textarea>
+        <div class="radio-buttons">
+          <input type="radio" id="wantToRead" name="readStatus" value="Want to read" checked>
+          <label for="wantToRead">Want to read</label>
+          <input type="radio" id="haveRead" name="readStatus" value="Have read">
+          <label for="haveRead">Have read</label>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+
 </div>

@@ -1,9 +1,10 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "api\Api.csproj", "{AB114D32-BE05-4CD1-A624-541E545F1C11}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mvc", "mvc\mvc.csproj", "{C8298C41-55E0-40AA-B7F4-6FF358CC7F9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +16,10 @@ Global
 		{AB114D32-BE05-4CD1-A624-541E545F1C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB114D32-BE05-4CD1-A624-541E545F1C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB114D32-BE05-4CD1-A624-541E545F1C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8298C41-55E0-40AA-B7F4-6FF358CC7F9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8298C41-55E0-40AA-B7F4-6FF358CC7F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8298C41-55E0-40AA-B7F4-6FF358CC7F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8298C41-55E0-40AA-B7F4-6FF358CC7F9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
