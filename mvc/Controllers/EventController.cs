@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace mvc.Controllers
 {
-    [Route("[controller]")]
+    [Route("event")]
     public class EventController : Controller
     {
         public IActionResult Index()
