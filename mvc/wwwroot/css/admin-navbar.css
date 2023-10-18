@@ -1,0 +1,67 @@
+/* General */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+  a {
+  text-decoration: none;
+}
+
+/* Basic styling for the navbar */
+.navbar {
+  background-color: #333;
+  padding: 1em;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+}
+
+/* Container within the navbar to align items */
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+/* Styling for the logo */
+.navbar-logo {
+  font-size: 24px;
+  color: white;
+  text-decoration: none;
+}
+
+/* Styling for the profile section */
+.navbar-profile {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: #007BFF;  /* New background color for profile unit */
+  color: #fff;  /* Text color */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect for the profile section */
+.navbar-profile:hover {
+  background-color: #0056b3;  /* Darker shade on hover */
+  transform: scale(1.05);
+}
+
+/* Styling for the profile picture */
+.profile-pic {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Styling for the profile name */
+.profile-name {
+  color: white;
+}

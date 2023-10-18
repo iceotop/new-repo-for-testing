@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,7 +6,7 @@
     <title>Index</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/index-content.css">
-    <link rel="stylesheet" href="~/css/navbar.css">
+    <link rel="stylesheet" href="~/css/admin-navbar.css">
 
 </head>
 <body>
@@ -14,10 +14,12 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a href="#" class="navbar-logo">Square Circle</a>
-            <div class="navbar-buttons">
-                <button class="navbar-button login">Log in</button>
-                <button class="navbar-button register">Register</button>
-            </div>
+            <a href="/path/to/profile-page">
+                <div class="navbar-profile">
+                    <img src="~/img/user.png" alt="Profile Picture" class="profile-pic">
+                    <span class="profile-name">MyUsername</span>
+                </div>
+            </a>
         </div>
     </nav>
 

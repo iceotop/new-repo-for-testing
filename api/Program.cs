@@ -12,6 +12,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Add CORS services
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:5120") // Replace with your frontend's address
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials(); 
+    });
+});
+
 builder.Services.AddHttpClient("GoogleBooks", c =>
     {
         c.BaseAddress = new Uri("https://www.googleapis.com/books/v1/");
@@ -100,7 +112,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseHttpsRedirection();
+app.UseCors();
+
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
