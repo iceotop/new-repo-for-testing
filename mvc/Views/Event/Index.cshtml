@@ -1,0 +1,39 @@
+@model IList<mvc.ViewModels.Event.EventListViewModel>
+
+@* @{
+    ViewData["Title"] = "Events";
+} *@
+
+@section styles{
+    <link rel="stylesheet" href="~/css/event-page.css">
+}
+
+<div class="event-top-img">
+    <div class="content">
+        <h1>Event</h1>
+        <p>Här nedan kan du se alla inlagda event</p>
+    </div>
+
+</div>
+
+
+@* <section class="events-boxes">
+    <div class="event-box">
+        @foreach (var event in Model)
+        {
+            <div class="event-info">
+                <h1>@event.Title</h1>
+                <p>Beskrivning: @event.Description</p>
+
+                <div class="handle-event">
+                    <a asp-action="Edit" asp-controller="Event" asp-route-Id=@event.Id method="get">Redigera</a>
+                </div>
+
+                <div class="handle-event">
+                    <a asp-action="Delete" asp-controller="Event" asp-route-Id=@event.Id>Ta bort</a>
+                </div>
+            </div>
+        }
+    </div>
+
+</section> *@
