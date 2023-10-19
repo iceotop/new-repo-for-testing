@@ -106,4 +106,23 @@ public class EventController : ControllerBase
         return Ok(bookEvent);
     }
 
+    [HttpPatch("join/{eventId}/{userId}")]
+    public async Task<IActionResult> Join(string eventId, string userId)
+    {
+        var e = await _context.Events.FindAsync(eventId);
+        if (e is null) return NotFound($"Bokcirkel med ID {eventId} kunde inte hittas");
+
+        var user = await _context.Users.FindAsync(userId);
+        if (user is null) return NotFound($"Användare med ID {userId} kunde inte hittas");
+
+        user.Events.Add(e);
+        _context.Users.Update(user);
+
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return NoContent();
+        }
+        return StatusCode(500, "Internal Server Error");
+    }
+
 }
