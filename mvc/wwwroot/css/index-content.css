@@ -260,6 +260,31 @@ button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
+/*----------------MODAL 2 STUFF----------------*/
+
+.custom-modal {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+}
+
+.custom-modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  width: 300px;
+}
+
+.close-button {
+  cursor: pointer;
+  float: right;
+  font-size: 18px;
+}
+
 /*Main buttons & page layout*/
 
 .half-container {

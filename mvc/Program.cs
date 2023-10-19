@@ -8,6 +8,17 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSignalR();
 
+// builder.Services.AddAuthorization(options =>
+// {
+//     options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+// });
+
+// // Configure cookies
+// builder.Services.ConfigureApplicationCookie(options =>
+// {
+//     options.LoginPath = "/account/login";
+// });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,6 +33,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

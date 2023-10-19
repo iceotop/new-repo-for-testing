@@ -42,6 +42,10 @@ document.addEventListener("DOMContentLoaded", function() {
       hideModal("modal2");
     });
 
+    // Login and register buttons for opening modals
+    document.querySelector('.login').addEventListener('click', () => openModal('loginModal'));
+    document.querySelector('.register').addEventListener('click', () => openModal('registerModal'));
+
     const searchForm = document.getElementById("search-form");
     const searchInput = document.getElementById("search-input");
 
@@ -152,14 +156,90 @@ function fetchBooks(query) {
     }
   }
 
-  // // Close modals when overlay is clicked
-  // document.querySelector('.modal-overlay').addEventListener('click', function() {
-  //   hideModal('modal1');
-  //   hideModal('modal2');
-  // });
+/*---------------------------------------------LOGIN/REGISTER STUFF---------------------------------------------*/
 
-  // Use these where needed in your existing code
-  // showModal('modal1');
-  // hideModal('modal1');
-  // showModal('modal2');
-  // hideModal('modal2');
+  function submitLoginForm() {
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    const data = {
+      UserName: username,
+      Password: password
+    };
+
+    fetch('http://localhost:5286/api/v1/account/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }).then(data => {
+      console.log(data)
+      // Store the user details somewhere if needed
+      closeModal('loginModal');  // Close the login modal
+    }).catch(error => {
+      console.error('Error:', error);
+    });
+  }
+
+  function submitRegistrationForm() {
+    const username = document.getElementById('register-username').value;
+    const password = document.getElementById('register-password').value;
+    const email = document.getElementById('register-email').value;
+    const firstName = document.getElementById('register-firstName').value;
+    const lastName = document.getElementById('register-lastName').value;
+
+    const data = {
+      UserName: username,
+      Password: password,
+      Email: email,
+      FirstName: firstName,
+      LastName: lastName
+    };
+
+    fetch('http://localhost:5286/api/v1/account/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(response => {
+      if (response.status === 201) {
+        return Promise.resolve("User created");
+      } else if (!response.ok) {
+        return response.json().then(data => {
+          throw new Error('Network response was not ok');
+        });
+      }
+    }).then(data => {
+      if (data === "User created") {
+        console.log(data);
+        closeModal('registerModal');
+      }
+    }).catch(error => {
+      console.error('Error:', error);
+    });
+
+  }
+
+
+  //Open login/register modal
+  function openModal(modalId) {
+    document.getElementById(modalId).style.display = "block";
+  }
+  //Close login/register modal
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+
+    if (modalId === 'loginModal') {
+      document.getElementById('login-username').value = '';
+      document.getElementById('login-password').value = '';
+    } else if (modalId === 'registerModal') {
+      document.getElementById('register-username').value = '';
+      document.getElementById('register-password').value = '';
+      document.getElementById('register-email').value = '';
+      document.getElementById('register-firstName').value = '';
+      document.getElementById('register-lastName').value = '';
+    }
+  }

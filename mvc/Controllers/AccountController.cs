@@ -12,13 +12,18 @@ public class AccountController : Controller
     private readonly string? _baseUrl;
     private readonly JsonSerializerOptions _options;
 
-    public AccountController(IConfiguration config, IHttpClientFactory httpClient)
+
+    public AccountController(
+        IConfiguration config, 
+        IHttpClientFactory httpClient)
     {
         _httpClient = httpClient;
         _config = config;
         _baseUrl = _config.GetSection("apiSettings:baseUrl").Value;
         _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
     }
+    
     public IActionResult Index()
     {
         return View();

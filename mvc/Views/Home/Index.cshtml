@@ -42,3 +42,32 @@
     </div>
 
 </div>
+
+<!-- "Log in"-modal -->
+<div class="custom-modal" id="loginModal">
+  <div class="custom-modal-content">
+    <h4>Log-in</h4>
+    <button class="close-button" onclick="closeModal('loginModal')">&times;</button>
+    <form id="loginForm">
+      <input type="text" id="login-username" placeholder="Username">
+      <input type="password" id="login-password" placeholder="Password">
+    </form>
+    <button onclick="submitLoginForm()">Log in</button>
+  </div>
+</div>
+
+<!-- "Register"-modal -->
+<div class="custom-modal" id="registerModal">
+  <div class="custom-modal-content">
+    <h4>Registration</h4>
+    <button class="close-button" onclick="closeModal('registerModal')">&times;</button>
+    <form id="registerForm">
+      <input type="text" id="register-username" placeholder="Username">
+      <input type="password" id="register-password" placeholder="Password">
+      <input type="email" id="register-email" placeholder="Email">
+      <input type="text" id="register-firstName" placeholder="First Name">
+      <input type="text" id="register-lastName" placeholder="Last Name">
+    </form>
+    <button onclick="submitRegistrationForm()">Register</button>
+  </div>
+</div>

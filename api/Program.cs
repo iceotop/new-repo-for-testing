@@ -46,6 +46,11 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
     options.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<BookCircleContext>();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+});
+
 // Configure cookies
 builder.Services.ConfigureApplicationCookie(options =>
 {
