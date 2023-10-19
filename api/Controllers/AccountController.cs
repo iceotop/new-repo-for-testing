@@ -80,6 +80,7 @@ public class AccountController : ControllerBase
         var result = await _context.Users
             .Where(u => u.Id == id)
             .Include(u => u.Books)
+            .Include (u => u.Events)
             .SingleOrDefaultAsync();
 
         var user = new ProfileViewModel
@@ -95,7 +96,15 @@ public class AccountController : ControllerBase
                     Review = b.Review,
                     IsRead = b.IsRead
                 }
-            ).ToList()
+            ).ToList(),
+            Events = result.Events!.Select(
+                e => new EventBaseViewModel
+                {
+                    Title = e.Title,
+                    Description = e.Description,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate
+                }).ToList()
         };
         return Ok(user);
     }
