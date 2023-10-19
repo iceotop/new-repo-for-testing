@@ -35,7 +35,7 @@ a {
   }
   
   /* Button styles */
-  .navbar-button {
+  .navbar-btn {
     background-color: #007BFF; /* Blue to match the admin version */
     color: white;
     padding: 10px 20px;
@@ -46,13 +46,13 @@ a {
     transition: background-color 0.3s ease, transform 0.3s ease;
   }
   
-  .navbar-button:hover {
+  .navbar-btn:hover {
     background-color: #0056b3; /* Darker blue on hover */
     transform: scale(1.05); /* Slight enlargement */
   }
   
   /* Add these if you want 3D effect */
-  .navbar-button:active {
+  .navbar-btn:active {
     background-color: #004085; /* Even darker on active/click */
     box-shadow: 0 5px #666;
     transform: translateY(4px);

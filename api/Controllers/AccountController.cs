@@ -69,7 +69,7 @@ public class AccountController : ControllerBase
             return ValidationProblem();
         }
 
-        await _userManager.AddToRoleAsync(user, "User");
+        await _userManager.AddToRoleAsync(user, "Admin");
 
         return StatusCode(201);
     }
