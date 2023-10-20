@@ -5,33 +5,29 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace mvc.ViewModels.Event
-{
-    public class EventUpdateViewModel
+namespace mvc.ViewModels.Event;
+
+    public class EventDetailsViewModel
     {
         [Required(ErrorMessage = "Id är obligatoriskt")]
         [DisplayName("Id")]
-        public string Id {get; set;} = "";
+        public string Id { get; set; } = "";
 
         [Required(ErrorMessage = "Title är obligatoriskt")]
         [DisplayName("Title")]
-        public string Title {get; set;} = "";
+        public string Title { get; set; } = "";
 
         [Required(ErrorMessage = "Book är obligatoriskt")]
         [DisplayName("Book")]
-        public string Book {get; set;} = "";
+        public string Book { get; set; } = "";
 
         [Required(ErrorMessage = "Description är obligatoriskt")]
         [DisplayName("Description")]
-        public string Description {get; set;} = "";
+        public string Description { get; set; } = "";
 
-        [Required(ErrorMessage = "StartDate är obligatoriskt")]
         [DisplayName("StartDate")]
-        public string StartDate {get; set;} = "";
+        public string StartDate { get; set; } = "";
 
-        [Required(ErrorMessage = "EndDate är obligatoriskt")]
         [DisplayName("EndDate")]
-        public string EndDate {get; set;} = "";
-        
+        public string EndDate { get; set; } = "";
     }
-}
