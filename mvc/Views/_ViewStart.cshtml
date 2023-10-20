@@ -1,3 +1,34 @@
-﻿@{
-    Layout = User.IsInRole("Admin") ? "_AdminLayout" : "_Layout";
+﻿@using System.IdentityModel.Tokens.Jwt
+@using System.Linq
+@using System.Security.Claims
+
+@{
+    var jwtToken = Context.Request.Cookies["jwtToken"];
+    if (!string.IsNullOrEmpty(jwtToken)) {
+        var handler = new JwtSecurityTokenHandler();
+        
+        try {
+            var jsonToken = handler.ReadToken(jwtToken);
+            var tokenS = jsonToken as JwtSecurityToken;
+
+            var roleClaim = tokenS.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
+            
+            if (roleClaim != null) {
+                bool isAdmin = roleClaim.Value == "Admin"; // You can change this to whatever role you're using for admin
+                
+                if (isAdmin) {
+                    Layout = "_AdminLayout";
+                } else {
+                    Layout = "_Layout";
+                }
+            } else {
+                Layout = "_Layout"; // Default to regular layout if role claim is not found
+            }
+        } catch (Exception ex) {
+            // Handle exception
+            Layout = "_Layout"; // Default to regular layout if any exception occurs
+        }
+    } else {
+        Layout = "_Layout";
+    }
 }

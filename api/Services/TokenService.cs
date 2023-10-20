@@ -42,7 +42,7 @@ public class TokenService
             audience: null,
             claims: claims,
             //Ändra?
-            expires: DateTime.Now.AddDays(5),
+            expires: DateTime.Now.AddMinutes(30),
             signingCredentials: credentials
         );
 

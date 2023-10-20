@@ -46,10 +46,10 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
     options.User.RequireUniqueEmail = true;
 }).AddEntityFrameworkStores<BookCircleContext>();
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-});
+// builder.Services.AddAuthorization(options =>
+// {
+//     options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+// });
 
 // Configure cookies
 builder.Services.ConfigureApplicationCookie(options =>
@@ -58,10 +58,10 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // Setup av JWT
-// builder.Services.AddIdentityCore<UserModel>()
-// .AddRoles<IdentityRole>()
-// .AddEntityFrameworkStores<BookCircleContext>();
-// builder.Services.AddScoped<TokenService>();
+builder.Services.AddIdentityCore<UserModel>()
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<BookCircleContext>();
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -70,18 +70,18 @@ builder.Services.AddSwaggerGen();
 
 
 // Setup av JWT
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuer = false,
-//             ValidateAudience = false,
-//             ValidateLifetime = true,
-//             ValidateIssuerSigningKey = true,
-//             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("tokenSettings:tokenKey").Value))
-//         };
-//     });
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("tokenSettings:tokenKey").Value))
+        };
+    });
 
 builder.Services.AddAuthorization();
 

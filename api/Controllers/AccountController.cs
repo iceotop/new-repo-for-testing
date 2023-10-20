@@ -15,13 +15,13 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
     private readonly SignInManager<UserModel> _signInManager;
-    // private readonly TokenService _tokenService; - JWT
+    private readonly TokenService _tokenService;
     private readonly BookCircleContext _context;
 
-    // public AccountController(UserManager<UserModel> userManager, TokenService tokenService, BookCircleContext context) - JWT
-    public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager, BookCircleContext context)
+    
+    public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager, BookCircleContext context, TokenService tokenService)
     {
-        // _tokenService = tokenService; - JWT
+        _tokenService = tokenService;
         _signInManager = signInManager;
         _userManager = userManager;
         _context = context;
@@ -31,20 +31,22 @@ public class AccountController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
-        var user = await _userManager.FindByNameAsync(model.UserName);
-
+        var user = await _userManager.FindByNameAsync(model.UserName); //what name exactly?
         if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
         {
             return Unauthorized();
         }
 
+        // Generate Token
+        var token = await _tokenService.CreateToken(user);
+
         return Ok(new UserViewModel
         {
             Email = user.Email,
-
-            // Token = await _tokenService.CreateToken(user) -JWT
+            Token = token  // Include the token in the response
         });
     }
+
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterViewModel model)
