@@ -1,33 +1,11 @@
 let modalContext = ""; // This will hold either "log" or "circle"
 
 document.addEventListener("DOMContentLoaded", function() {
-    // Create and style the 'Log book' button
-    const logBookButton = document.createElement("button");
-    logBookButton.textContent = "Log book";
-    logBookButton.className = "log-book-button";
+    const jwtToken = getCookie("jwtToken");
 
-    // Append the 'Log book' button to the bookReviewContainer
-    document.getElementById("bookReviewContainer").appendChild(logBookButton);
-    
-    // Create and style the 'Create Book circle' button
-    const createCircleButton = document.createElement("button");
-    createCircleButton.textContent = "Create Book circle";
-    createCircleButton.className = "create-circle-button";
-
-    // Append the 'Create Book circle' button to the bookCircleContainer
-    document.getElementById("bookCircleContainer").appendChild(createCircleButton);
-
-    // Add click event to the 'Log book' button to show the first modal
-    logBookButton.addEventListener("click", () => {
-      modalContext = "log";
-      showModal('modal1');
-    });
-
-    // Add click event to the 'Create Book circle' button (currently does nothing)
-    createCircleButton.addEventListener("click", () => {
-      modalContext = "circle";
-      showModal('modal1');
-    });
+    if (jwtToken) {
+      createButtons();
+    }
 
       // Close button for modal1
     const closeModal1 = document.getElementById("closeModal1");
@@ -59,6 +37,42 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+// Function to fetch the JWT cookie
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+// Function to create the 'Log book' and 'Create Book circle' buttons
+function createButtons() {
+  // Create and style the 'Log book' button
+  const logBookButton = document.createElement("button");
+  logBookButton.textContent = "Log book";
+  logBookButton.className = "log-book-button";
+
+  // Append the 'Log book' button to the bookReviewContainer
+  document.getElementById("bookReviewContainer").appendChild(logBookButton);
+
+  // Create and style the 'Create Book circle' button
+  const createCircleButton = document.createElement("button");
+  createCircleButton.textContent = "Create Book circle";
+  createCircleButton.className = "create-circle-button";
+
+  // Append the 'Create Book circle' button to the bookCircleContainer
+  document.getElementById("bookCircleContainer").appendChild(createCircleButton);
+
+  // Add click event to the 'Log book' button to show the first modal
+  logBookButton.addEventListener("click", () => {
+    showModal('modal1');
+  });
+
+  // Add click event to the 'Create Book circle' button
+  createCircleButton.addEventListener("click", () => {
+    showModal('modal1');
+  });
+}
 
 // Function to fetch book data from your API
 function fetchBooks(query) {
@@ -158,88 +172,72 @@ function fetchBooks(query) {
 
 /*---------------------------------------------LOGIN/REGISTER STUFF---------------------------------------------*/
 
-  function submitLoginForm() {
-    const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
+  // function submitLoginForm() {
+  //   const username = document.getElementById('login-username').value;
+  //   const password = document.getElementById('login-password').value;
 
-    const data = {
-      UserName: username,
-      Password: password
-    };
+  //   const data = {
+  //     UserName: username,
+  //     Password: password
+  //   };
 
-    fetch('http://localhost:5286/api/v1/account/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }).then(response => {
-      if (!response.ok) {
-          throw new Error('Network response was not ok');
-      }
-      return response.json();
-    }).then(data => {
-      console.log(data)
-      // Store the user details somewhere if needed
-      closeModal('loginModal');  // Close the login modal
-    }).catch(error => {
-      console.error('Error:', error);
-    });
-  }
+  //   fetch('http://localhost:5286/api/v1/account/login', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(data)
+  //   }).then(response => {
+  //     if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //     }
+  //     return response.json();
+  //   }).then(data => {
+  //     console.log(data)
+  //     // Store the user details somewhere if needed
+  //     closeModal('loginModal');  // Close the login modal
+  //   }).catch(error => {
+  //     console.error('Error:', error);
+  //   });
+  // }
 
-  function submitRegistrationForm() {
-    const username = document.getElementById('register-username').value;
-    const password = document.getElementById('register-password').value;
-    const email = document.getElementById('register-email').value;
-    const firstName = document.getElementById('register-firstName').value;
-    const lastName = document.getElementById('register-lastName').value;
+  // function submitRegistrationForm() {
+  //   const username = document.getElementById('register-username').value;
+  //   const password = document.getElementById('register-password').value;
+  //   const email = document.getElementById('register-email').value;
+  //   const firstName = document.getElementById('register-firstName').value;
+  //   const lastName = document.getElementById('register-lastName').value;
 
-    const data = {
-      UserName: username,
-      Password: password,
-      Email: email,
-      FirstName: firstName,
-      LastName: lastName
-    };
+  //   const data = {
+  //     UserName: username,
+  //     Password: password,
+  //     Email: email,
+  //     FirstName: firstName,
+  //     LastName: lastName
+  //   };
 
-    fetch('http://localhost:5286/api/v1/account/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }).then(response => {
-      if (response.status === 201) {
-        return Promise.resolve("User created");
-      } else if (!response.ok) {
-        return response.json().then(data => {
-          throw new Error('Network response was not ok');
-        });
-      }
-    }).then(data => {
-      if (data === "User created") {
-        console.log(data);
-        closeModal('registerModal');
-      }
-    }).catch(error => {
-      console.error('Error:', error);
-    });
-
-  }
+  //   fetch('http://localhost:5286/api/v1/account/register', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(data)
+  //   }).then(response => {
+  //     if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //     }
+  //     return response.json();
+  //   }).then(data => {
+  //     console.log(data)
+  //     // Store the user details somewhere if needed
+  //     closeModal('registerModal');  // Close the registration modal
+  //   }).catch(error => {
+  //     console.error('Error:', error);
+  //   });
+  // }
 
 
-  //Open login/register modal
-  function openModal(modalId) {
-    document.getElementById(modalId).style.display = "block";
-  }
-  //Close login/register modal
-  function closeModal(modalId) {
-    document.getElementById(modalId).style.display = "none";
-
-    if (modalId === 'loginModal') {
-      document.getElementById('login-username').value = '';
-      document.getElementById('login-password').value = '';
-    } else if (modalId === 'registerModal') {
-      document.getElementById('register-username').value = '';
-      document.getElementById('register-password').value = '';
-      document.getElementById('register-email').value = '';
-      document.getElementById('register-firstName').value = '';
-      document.getElementById('register-lastName').value = '';
-    }
-  }
+  // //Open login/register modal
+  // function openModal(modalId) {
+  //   document.getElementById(modalId).style.display = "block";
+  // }
+  // //Close login/register modal
+  // function closeModal(modalId) {
+  //   document.getElementById(modalId).style.display = "none";
+  // }

@@ -14,12 +14,15 @@
     <nav class="navbar">
         <div class="navbar-container">
             <a href="#" class="navbar-logo">Square Circle</a>
-            <a href="/path/to/profile-page">
-                <div class="navbar-profile">
-                    <img src="~/img/user.png" alt="Profile Picture" class="profile-pic">
-                    <span class="profile-name">MyUsername</span>
-                </div>
-            </a>
+            <div class="navbar-buttons"></div>
+                <a href="/path/to/profile-page">
+                    <div class="navbar-profile">
+                        <img src="~/img/user.png" alt="Profile Picture" class="profile-pic">
+                        <span class="profile-name">MyUsername</span>
+                    </div>
+                </a>
+                <button onclick="LogOut()" class="navbar-btn logout">Log out</button>
+            </div>
         </div>
     </nav>
 
@@ -29,5 +32,6 @@
     </main>
 
 <script src="~/js/index-content.js"></script>
+<script src="~/js/auth.js"></script>
 </body>
 </html>
