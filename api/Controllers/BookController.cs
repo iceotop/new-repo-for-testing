@@ -59,6 +59,7 @@ public class BookController : ControllerBase
     {
         var book = new Book
         {
+            Id = Guid.NewGuid().ToString(),
             Title = model.Title,
             Author = model.Author,
             PublicationYear = model.PublicationYear,
