@@ -29,11 +29,11 @@ public class AccountController : Controller
         return View();
     }
 
-    [HttpGet("details/{id}")]
-    public async Task<IActionResult> Details(string id)
+    [HttpGet("details/{email}")]
+    public async Task<IActionResult> Details(string email)
     {
         using var client = _httpClient.CreateClient();
-        var response = await client.GetAsync($"{_baseUrl}/account/{id}");
+        var response = await client.GetAsync($"{_baseUrl}/account/email/{email}");
         if (!response.IsSuccessStatusCode) return Content("Fel");
 
         var json = await response.Content.ReadAsStringAsync();
