@@ -18,7 +18,7 @@ public class EventController : ControllerBase
         _context = context;
     }
 
-    // TODO Här skulle vi behöva fixa en ViewModel
+    // TODO Här skulle vi behöva fixa en ViewModel 
     [HttpGet]
     public async Task<ActionResult<List<Event>>> Get()
     {
@@ -27,7 +27,7 @@ public class EventController : ControllerBase
 
     [HttpGet("{id}")]
     [Authorize(Roles = "User")]
-    public async Task<ActionResult<Event>> Get(string id)
+    public async Task<ActionResult> GetById(string id)
     {
         var result = await _context.Events
             .Where(e => e.Id == id)
@@ -53,12 +53,26 @@ public class EventController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "User")]
-    public async Task<ActionResult<List<Event>>> Add(Event newEvent)
-    {
-        _context.Events.Add(newEvent);
-        await _context.SaveChangesAsync();
+    public async Task<ActionResult> Create(EventBaseViewModel model)
+    {   
+        var eventToAdd = new Event
+        {
+            Id = Guid.NewGuid().ToString(),
+            Title = model.Title,
+            Book = model.Book,
+            Description = model.Description,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate
+        };
 
-        return Ok(await _context.Events.ToListAsync());
+        await _context.Events.AddAsync(eventToAdd);
+
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return Created(nameof(GetById), new { id = eventToAdd.Id });
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpPut]

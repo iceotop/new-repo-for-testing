@@ -52,31 +52,31 @@ public class EventController : Controller
     }
 
     [HttpGet("create")]
-public IActionResult Create()
-{
-    var Event = new EventPostViewModel();
-    return View("Create", Event);
-}
-
+    public IActionResult Create()
+    {
+        var Event = new EventPostViewModel();
+        return View("Create", Event);
+    }
 
     [HttpPost("create")]
     public async Task<IActionResult> Create(EventPostViewModel events)
     {
         if (!ModelState.IsValid) return View("Create", events);
 
-        var model = new
+        var model = new Event
         {
+            Id = Guid.NewGuid().ToString(),
             Title = events.Title,
             Book = events.Book,
-            StartDate = events.StartDate,
-            EndDate = events.EndDate,
+            // StartDate = events.StartDate,
+            // EndDate = events.EndDate,
             Description = "Test"
         };
 
         using var client = _httpClient.CreateClient();
-        var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, Application.Json);
+        var body = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, Application.Json);
 
-        var response = await client.PostAsync($"{_baseUrl}/events", content);
+        var response = await client.PostAsync($"{_baseUrl}/event", body);
 
         if (response.IsSuccessStatusCode)
         {
