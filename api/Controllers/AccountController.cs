@@ -14,18 +14,15 @@ namespace api.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
-    private readonly SignInManager<UserModel> _signInManager;
     private readonly TokenService _tokenService;
     private readonly BookCircleContext _context;
 
-    
-    public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager, BookCircleContext context, TokenService tokenService)
+
+    public AccountController(UserManager<UserModel> userManager, BookCircleContext context, TokenService tokenService)
     {
         _tokenService = tokenService;
-        _signInManager = signInManager;
         _userManager = userManager;
         _context = context;
-
     }
 
     [HttpPost("login")]
@@ -82,7 +79,7 @@ public class AccountController : ControllerBase
         var result = await _context.Users
             .Where(u => u.Id == id)
             .Include(u => u.Books)
-            .Include (u => u.Events)
+            .Include(u => u.Events)
             .SingleOrDefaultAsync();
 
         var user = new ProfileViewModel
