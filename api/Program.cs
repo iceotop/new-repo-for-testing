@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
         builder.WithOrigins("http://localhost:5120") // Replace with your frontend's address
                .AllowAnyHeader()
                .AllowAnyMethod()
-               .AllowCredentials(); 
+               .AllowCredentials();
     });
 });
 
@@ -33,29 +33,6 @@ builder.Services.AddHttpClient("GoogleBooks", c =>
 builder.Services.AddDbContext<BookCircleContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"))
 );
-
-// Set up Identity to use cookies and BookCircleContext
-builder.Services.AddIdentity<UserModel, IdentityRole>(options =>
-{
-    options.Password.RequireDigit = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6;
-
-    options.Lockout.MaxFailedAccessAttempts = 5;
-
-    options.User.RequireUniqueEmail = true;
-}).AddEntityFrameworkStores<BookCircleContext>();
-
-// builder.Services.AddAuthorization(options =>
-// {
-//     options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-// });
-
-// Configure cookies
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/account/login";
-});
 
 // Setup av JWT
 builder.Services.AddIdentityCore<UserModel>()
