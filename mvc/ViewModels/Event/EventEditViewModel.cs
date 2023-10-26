@@ -9,6 +9,9 @@ namespace mvc.ViewModels.Event
 {
     public class EventEditViewModel
     {
+        [Required(ErrorMessage = "Id är obligatoriskt")]
+        [DisplayName("Id")]
+        public string Id {get; set;} = "";
         [Required(ErrorMessage = "Title är obligatoriskt")]
         [DisplayName("Title")]
         public string Title {get; set;} = "";

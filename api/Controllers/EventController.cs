@@ -54,7 +54,7 @@ public class EventController : ControllerBase
     [HttpPost]
     // [Authorize(Roles = "User")]
     public async Task<ActionResult> Create(EventBaseViewModel model)
-    {   
+    {
         var eventToAdd = new Event
         {
             Id = Guid.NewGuid().ToString(),
@@ -107,6 +107,26 @@ public class EventController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(await _context.Events.ToListAsync());
     }
+
+    [HttpPost("{id}")]
+    // [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Edit(string id, Event model)
+    {
+        var bookEvent = await _context.Events.FindAsync(id);
+        if (bookEvent == null)
+            return BadRequest("Event not found.");
+
+        bookEvent.Id = model.Id;
+        bookEvent.Title = model.Title;
+        bookEvent.Description = model.Description;
+        bookEvent.StartDate = model.StartDate;
+        bookEvent.EndDate = model.EndDate;
+
+        _context.Events.Update(bookEvent);
+
+        await _context.SaveChangesAsync();
+        return Ok(await _context.Events.ToListAsync());
+    }
     
     [HttpGet("details/{id}")]
     // [Authorize(Roles = "User")]
@@ -138,5 +158,7 @@ public class EventController : ControllerBase
         }
         return StatusCode(500, "Internal Server Error");
     }
+
+
 
 }

@@ -1,7 +1,6 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using mvc.Models;
 using mvc.ViewModels.Event;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -78,13 +77,13 @@ public class EventController : Controller
     {
         if (!ModelState.IsValid) return View("Create", events);
 
-        var model = new EventModel
+        var model = new
         {
             Id = Guid.NewGuid().ToString(),
             Title = events.Title,
             Book = events.Book,
-            // StartDate = events.StartDate,
-            // EndDate = events.EndDate,
+            StartDate = events.StartDate,
+            EndDate = events.EndDate,
             Description = "Test"
         };
 
@@ -100,18 +99,18 @@ public class EventController : Controller
         return Content("Done!");
     }
 
-    [HttpGet("edit/{Id}")]
-    public async Task<IActionResult> Edit(string Id)
+    [HttpGet("edit/{id}")]
+    public async Task<IActionResult> Edit(string id)
     {
         using var client = _httpClient.CreateClient();
-        var response = await client.GetAsync($"{_baseUrl}/events/details/{Id}");
+        var response = await client.GetAsync($"{_baseUrl}/events/details/{id}");
 
         if (!response.IsSuccessStatusCode) return Content("Error fetching event details.");
 
         var json = await response.Content.ReadAsStringAsync();
-        var existingEvent = JsonSerializer.Deserialize<EventModel>(json, _options);
+        var existingEvent = JsonSerializer.Deserialize<EventEditViewModel>(json, _options);
 
-        var EventViewModel = new EventEditViewModel
+        var events = new EventEditViewModel
         {
             Title = existingEvent.Title,
             Book = existingEvent.Book,
@@ -120,30 +119,35 @@ public class EventController : Controller
             EndDate = existingEvent.EndDate
         };
 
-        return View("Edit", EventViewModel);
+        return View("Edit", events);
     }
 
-    [HttpPost("edit/{Id}")]
-    public async Task<IActionResult> Edit(string Id, EventEditViewModel Model)
+    [HttpPost("edit/{id}")]
+    public async Task<IActionResult> Edit(string id, EventEditViewModel Model)
     {
-        if (!ModelState.IsValid) return View("Edit", Model);
+        if (!ModelState.IsValid)
+            return View("Edit", Model);
 
-        var existingEvent = await _yourDataService.EventModel(Id);
-        if (existingEvent == null)
+        using var client = _httpClient.CreateClient();
+
+        var responseGet = await client.GetAsync($"{_baseUrl}/events/{id}");
+        if (!responseGet.IsSuccessStatusCode)
         {
             return NotFound();
         }
+        var existingEventJson = await responseGet.Content.ReadAsStringAsync();
+        var existingEvent = JsonSerializer.Deserialize<EventEditViewModel>(existingEventJson);
 
+        existingEvent.Id = Model.Id;
         existingEvent.Title = Model.Title;
         existingEvent.Book = Model.Book;
         existingEvent.Description = Model.Description;
         existingEvent.StartDate = Model.StartDate;
         existingEvent.EndDate = Model.EndDate;
 
-        using var client = _httpClient.CreateClient();
         var body = new StringContent(JsonSerializer.Serialize(existingEvent), Encoding.UTF8, "application/json");
 
-        var response = await client.PutAsync($"{_baseUrl}/events/{Id}", body);
+        var response = await client.PostAsync($"{_baseUrl}/events/{id}", body);
 
         if (response.IsSuccessStatusCode)
         {
@@ -151,5 +155,4 @@ public class EventController : Controller
         }
         return Content("Failed to update the event.");
     }
-
 }
