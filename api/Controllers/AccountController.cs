@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using api.Data;
 using api.Models;
 using api.Services;
@@ -28,7 +29,7 @@ public class AccountController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
-        var user = await _userManager.FindByNameAsync(model.UserName); //what name exactly?
+        var user = await _userManager.FindByNameAsync(model.UserName);
         if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
         {
             return Unauthorized();
@@ -82,6 +83,48 @@ public class AccountController : ControllerBase
             .Include(u => u.Events)
             .SingleOrDefaultAsync();
 
+        var user = new ProfileViewModel
+        {
+            FirstName = result.FirstName,
+            LastName = result.LastName,
+            Books = result.Books!.Select(
+                b => new BookBaseViewModel
+                {
+                    Title = b.Title,
+                    Author = b.Author,
+                    PublicationYear = b.PublicationYear,
+                    Review = b.Review,
+                    IsRead = b.IsRead
+                }
+            ).ToList(),
+            Events = result.Events!.Select(
+                e => new EventBaseViewModel
+                {
+                    Title = e.Title,
+                    Description = e.Description,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate
+                }).ToList()
+        };
+        return Ok(user);
+    }
+
+    [HttpGet("email")]
+    public async Task<IActionResult> FindByEmail()
+    {
+        // "User" = property som hör till ControllerBase och hanterar claims
+        // FindFirst plockar upp det första claimet som uppnår villkoret
+        var emailClaim = User.FindFirst(claim => claim.Type == ClaimTypes.Email);
+        string email = emailClaim.Value;
+
+        // hämta ur db som vanligt
+        var result = await _context.Users
+            .Where(u => u.Email == email)
+            .Include(u => u.Books)
+            .Include(u => u.Events)
+            .SingleOrDefaultAsync();
+
+        // mappa till viewmodel
         var user = new ProfileViewModel
         {
             FirstName = result.FirstName,
