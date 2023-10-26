@@ -105,7 +105,7 @@ public class EventController : Controller
         using var client = _httpClient.CreateClient();
         var response = await client.GetAsync($"{_baseUrl}/events/details/{id}");
 
-        if (!response.IsSuccessStatusCode) return Content("Error fetching event details.");
+        if (!response.IsSuccessStatusCode) return Content("Error fetching event Edit.");
 
         var json = await response.Content.ReadAsStringAsync();
         var existingEvent = JsonSerializer.Deserialize<EventEditViewModel>(json, _options);
