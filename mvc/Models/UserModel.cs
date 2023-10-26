@@ -11,7 +11,7 @@ namespace mvc.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
 
-        public ICollection<Event> Events { get; set; } = new List<Event>();
+        public ICollection<EventModel> Events { get; set; } = new List<EventModel>();
         // public ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

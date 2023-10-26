@@ -32,7 +32,7 @@ public class BookController : ControllerBase
 
     // Hämta enskild bok på ID
     [HttpGet("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     // [Authorize(Roles = "User, Admin")] - Om man vill lägga till flera roller
     public async Task<ActionResult> GetById(string id)
     {
@@ -54,7 +54,7 @@ public class BookController : ControllerBase
 
     // Add a new book
     [HttpPost()]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult> Create(BookBaseViewModel model)
     {
         var book = new Book
@@ -78,7 +78,7 @@ public class BookController : ControllerBase
 
     // Edit a book
     [HttpPut("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> EditBook(string id, [FromBody] Book updatedBook)
     {
         var existingBook = await _context.Books.FindAsync(id);
@@ -101,7 +101,7 @@ public class BookController : ControllerBase
 
     // Add a book to an event
     [HttpPatch("{bookId}/{eventId}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> AddToEvent(string bookId, string eventId)
     {
         var book = await _context.Books.FindAsync(bookId);
@@ -138,7 +138,7 @@ public class BookController : ControllerBase
 
     // Remove a book
     [HttpDelete("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> RemoveBook(string id)
     {
         var existingBook = await _context.Books.FindAsync(id);

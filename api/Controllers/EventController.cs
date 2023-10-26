@@ -26,7 +26,7 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult> GetById(string id)
     {
         var result = await _context.Events
@@ -52,7 +52,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult> Create(EventBaseViewModel model)
     {   
         var eventToAdd = new Event
@@ -76,7 +76,7 @@ public class EventController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult<List<Event>>> Update(Event request)
     {
         var bookEvent = await _context.Events.FindAsync(request.Id);
@@ -95,7 +95,7 @@ public class EventController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public async Task<ActionResult<List<Event>>> Delete(string id)
     {
         var bookEvent = await _context.Events.FindAsync(id);
@@ -107,9 +107,9 @@ public class EventController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(await _context.Events.ToListAsync());
     }
-
+    
     [HttpGet("details/{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult<Event>> Details(string id)
     {
         var bookEvent = await _context.Events.FindAsync(id);

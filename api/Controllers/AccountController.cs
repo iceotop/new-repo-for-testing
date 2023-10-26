@@ -10,7 +10,7 @@ using SQLitePCL;
 
 namespace api.Controllers;
 [ApiController]
-[Route("api/v1/account")]
+// [Route("api/v1/account")]
 public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;

@@ -1,4 +1,4 @@
-@model IList<mvc.ViewModels.Event.EventListViewModel>
+@model IEnumerable<mvc.ViewModels.Event.EventListViewModel>
 
 @{
     ViewData["Title"] = "Events";
@@ -13,7 +13,7 @@
 
 </div>
 <div class="handle-event">
-    <a asp-action="create" asp-controller="Event" >Skapa event</a>
+    <a asp-action="create" asp-controller="Event">Skapa event</a>
 </div>
 
 <section class="events-boxes">
@@ -25,11 +25,17 @@
                 <p>Beskrivning: @events.Description</p>
 
                 <div class="handle-event">
-                    <a asp-action="details" asp-controller="Event" asp-route-Id=@events.Id method="get">Redigera</a>
+                    <a asp-action="details" asp-controller="Event" asp-route-Id=@events.Id method="get">Details</a>
                 </div>
 
                 <div class="handle-event">
-                    <a asp-action="Delete" asp-controller="Event" asp-route-Id=@events.Id>Ta bort</a>
+                    <form method="post" asp-action="Delete" asp-controller="Event" asp-route-Id=@events.Id>
+                        <button type="submit">Ta bort</button>
+                    </form>
+                </div>
+
+                <div class="handle-event">
+                    <a asp-action="edit" asp-controller="Event" asp-route-Id=@events.Id>Edit</a>
                 </div>
             </div>
         }
