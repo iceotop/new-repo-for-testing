@@ -26,11 +26,11 @@ namespace mvc.ViewModels.Event
 
         [Required(ErrorMessage = "StartDate är obligatoriskt")]
         [DisplayName("StartDate")]
-        public string StartDate {get; set;} = "";
+        public DateTime StartDate {get; set;}
 
         [Required(ErrorMessage = "EndDate är obligatoriskt")]
         [DisplayName("EndDate")]
-        public string EndDate {get; set;} = "";
+        public DateTime EndDate {get; set;}
         
     }
 }
