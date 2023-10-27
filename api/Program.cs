@@ -18,9 +18,9 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(builder =>
     {
         builder.WithOrigins("http://localhost:5120") // Replace with your frontend's address
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowCredentials();
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials(); 
     });
 });
 
