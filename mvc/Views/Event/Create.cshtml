@@ -1,14 +1,10 @@
 @model mvc.ViewModels.Event.EventPostViewModel
 
-@* @{
-    Layout = "_LayoutAdmin";
-} *@
-
 <section class="page">
     <h1 class="page-title">Skapa Event</h1>
-    <form class="shadow" asp-action="create" asp-controller="Event" method="post">
+    <form class="shadow" asp-action="Create" asp-controller="Event" method="post">
         <div class="form-control">
-            <label for="Title">Title</label>
+            <label asp-for="Title"></label>
             <input asp-for="Title" />
             <span class="error" asp-validation-for="Title"></span>
         </div>

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using api.Data;
 using api.Models;
 using api.Services;
@@ -14,24 +15,21 @@ namespace api.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
-    private readonly SignInManager<UserModel> _signInManager;
     private readonly TokenService _tokenService;
     private readonly BookCircleContext _context;
 
-    
-    public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager, BookCircleContext context, TokenService tokenService)
+
+    public AccountController(UserManager<UserModel> userManager, BookCircleContext context, TokenService tokenService)
     {
         _tokenService = tokenService;
-        _signInManager = signInManager;
         _userManager = userManager;
         _context = context;
-
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
-        var user = await _userManager.FindByNameAsync(model.UserName); //what name exactly?
+        var user = await _userManager.FindByNameAsync(model.UserName);
         if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
         {
             return Unauthorized();
@@ -111,15 +109,22 @@ public class AccountController : ControllerBase
         return Ok(user);
     }
 
-    [HttpGet("email/{email}")]
-    public async Task<IActionResult> GetByEmail(string email)
+    [HttpGet("email")]
+    public async Task<IActionResult> FindByEmail()
     {
+        // "User" = property som hör till ControllerBase och hanterar claims
+        // FindFirst plockar upp det första claimet som uppnår villkoret
+        var emailClaim = User.FindFirst(claim => claim.Type == ClaimTypes.Email);
+        string email = emailClaim.Value;
+
+        // hämta ur db som vanligt
         var result = await _context.Users
             .Where(u => u.Email == email)
             .Include(u => u.Books)
             .Include(u => u.Events)
             .SingleOrDefaultAsync();
 
+        // mappa till viewmodel
         var user = new ProfileViewModel
         {
             FirstName = result.FirstName,
