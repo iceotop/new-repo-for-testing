@@ -84,7 +84,7 @@ public class EventController : Controller
             Book = events.Book,
             StartDate = events.StartDate,
             EndDate = events.EndDate,
-            Description = "Test"
+            Description = events.Description
         };
 
         using var client = _httpClient.CreateClient();
