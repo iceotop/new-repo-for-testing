@@ -1,4 +1,5 @@
 using api.Data;
+using api.Interfaces;
 using api.Models;
 using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -13,17 +14,20 @@ namespace api.Controllers;
 public class BookController : ControllerBase
 {
     private readonly BookCircleContext _context;
+    private readonly IBookRepository _repo;
 
-    public BookController(BookCircleContext context)
+    public BookController(BookCircleContext context, IBookRepository repo)
     {
+        _repo = repo;
         _context = context;
     }
 
     // Display all books
     [HttpGet]
-    public IActionResult ListAllBooks()
+    public async Task<IActionResult> ListAllBooks()
     {
-        var list = _context.Books.ToList();
+        // var list = await _context.Books.ToListAsync();
+        var list = await _repo.ListAllAsync();
 
         if (list is []) return NotFound($"Böcker kunde inte hittas");
 
@@ -67,6 +71,7 @@ public class BookController : ControllerBase
             IsRead = model.IsRead
         };
 
+        // await _context.Books.AddAsync(book);
         await _context.Books.AddAsync(book);
 
         if (await _context.SaveChangesAsync() > 0)

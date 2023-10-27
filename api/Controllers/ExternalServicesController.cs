@@ -14,12 +14,12 @@ namespace api.Controllers
     [Route("api/v1/externalservices")]
     public class ExternalServicesController : ControllerBase
     {
-        private readonly IHttpClientFactory  _httpClient;
+        private readonly IHttpClientFactory _httpClient;
         private readonly JsonSerializerOptions _options;
 
         public ExternalServicesController(IHttpClientFactory httpClient)
         {
-             _httpClient = httpClient;
+            _httpClient = httpClient;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
@@ -37,7 +37,8 @@ namespace api.Controllers
             try
             {
                 var googleBooksResponse = await JsonSerializer.DeserializeAsync<GoogleBooksResponse>(responseStream, _options);
-                var books = googleBooksResponse?.Items.Select(item => new BookDto {
+                var books = googleBooksResponse?.Items.Select(item => new BookDto
+                {
                     Title = item.VolumeInfo.Title,
                     Author = item.VolumeInfo.Authors?.FirstOrDefault(),
                     PublicationYear = item.VolumeInfo.PublishedDate,
@@ -61,7 +62,7 @@ namespace api.Controllers
         }
 
 
-//------classes to handle response from google books api
+        //------classes to handle response from google books api
         public class GoogleBooksResponse
         {
             public List<GoogleBookItem> Items { get; set; }

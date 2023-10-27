@@ -1,4 +1,5 @@
 using api.Data;
+using api.Interfaces;
 using api.Models;
 using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -13,8 +14,10 @@ namespace Api.Controllers;
 public class EventController : ControllerBase
 {
     public BookCircleContext _context;
-    public EventController(BookCircleContext context)
+    private readonly IEventRepository _repo;
+    public EventController(BookCircleContext context, IEventRepository repo)
     {
+        _repo = repo;
         _context = context;
     }
 
