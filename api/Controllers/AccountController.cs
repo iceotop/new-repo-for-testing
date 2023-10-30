@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using api.Data;
+using api.Interfaces;
 using api.Models;
 using api.Services;
 using api.ViewModels;
@@ -18,9 +19,11 @@ public class AccountController : ControllerBase
     private readonly TokenService _tokenService;
     private readonly BookCircleContext _context;
 
+    private readonly IUserRepository _repo;
 
-    public AccountController(UserManager<UserModel> userManager, BookCircleContext context, TokenService tokenService)
+    public AccountController(UserManager<UserModel> userManager, BookCircleContext context, TokenService tokenService, IUserRepository repo)
     {
+        _repo = repo;
         _tokenService = tokenService;
         _userManager = userManager;
         _context = context;
