@@ -21,7 +21,7 @@ public class EventController : ControllerBase
         _context = context;
     }
 
-    // TODO Här skulle vi behöva fixa en ViewModel
+    // TODO Här skulle vi behöva fixa en ViewModel 
     [HttpGet]
     public async Task<ActionResult<List<Event>>> Get()
     {
@@ -29,8 +29,8 @@ public class EventController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "User")]
-    public async Task<ActionResult<Event>> Get(string id)
+    // [Authorize(Roles = "User")]
+    public async Task<ActionResult> GetById(string id)
     {
         var result = await _context.Events
             .Where(e => e.Id == id)
@@ -55,17 +55,31 @@ public class EventController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "User")]
-    public async Task<ActionResult<List<Event>>> Add(Event newEvent)
+    // [Authorize(Roles = "User")]
+    public async Task<ActionResult> Create(EventBaseViewModel model)
     {
-        _context.Events.Add(newEvent);
-        await _context.SaveChangesAsync();
+        var eventToAdd = new Event
+        {
+            Id = Guid.NewGuid().ToString(),
+            Title = model.Title,
+            Book = model.Book,
+            Description = model.Description,
+            StartDate = model.StartDate,
+            EndDate = model.EndDate
+        };
 
-        return Ok(await _context.Events.ToListAsync());
+        await _context.Events.AddAsync(eventToAdd);
+
+        if (await _context.SaveChangesAsync() > 0)
+        {
+            return Created(nameof(GetById), new { id = eventToAdd.Id });
+        }
+
+        return StatusCode(500, "Internal Server Error");
     }
 
     [HttpPut]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult<List<Event>>> Update(Event request)
     {
         var bookEvent = await _context.Events.FindAsync(request.Id);
@@ -84,7 +98,7 @@ public class EventController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public async Task<ActionResult<List<Event>>> Delete(string id)
     {
         var bookEvent = await _context.Events.FindAsync(id);
@@ -97,8 +111,28 @@ public class EventController : ControllerBase
         return Ok(await _context.Events.ToListAsync());
     }
 
+    [HttpPost("{id}")]
+    // [Authorize(Roles = "Admin")]
+    public async Task<ActionResult> Edit(string id, Event model)
+    {
+        var bookEvent = await _context.Events.FindAsync(id);
+        if (bookEvent == null)
+            return BadRequest("Event not found.");
+
+        bookEvent.Id = model.Id;
+        bookEvent.Title = model.Title;
+        bookEvent.Description = model.Description;
+        bookEvent.StartDate = model.StartDate;
+        bookEvent.EndDate = model.EndDate;
+
+        _context.Events.Update(bookEvent);
+
+        await _context.SaveChangesAsync();
+        return Ok(await _context.Events.ToListAsync());
+    }
+    
     [HttpGet("details/{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult<Event>> Details(string id)
     {
         var bookEvent = await _context.Events.FindAsync(id);
@@ -127,5 +161,7 @@ public class EventController : ControllerBase
         }
         return StatusCode(500, "Internal Server Error");
     }
+
+
 
 }
