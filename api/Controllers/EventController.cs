@@ -13,14 +13,12 @@ namespace Api.Controllers;
 [ApiController]
 public class EventController : ControllerBase
 {
-    public BookCircleContext _context;
     private readonly IEventRepository _eventRepo;
     private readonly IUserRepository _userRepo;
-    public EventController(BookCircleContext context, IEventRepository eventRepo, IUserRepository userRepo)
+    public EventController(IEventRepository eventRepo, IUserRepository userRepo)
     {
         _userRepo = userRepo;
         _eventRepo = eventRepo;
-        _context = context;
     }
 
     // TODO Här skulle vi behöva fixa en ViewModel
@@ -34,10 +32,8 @@ public class EventController : ControllerBase
     // [Authorize(Roles = "User")]
     public async Task<ActionResult<Event>> GetById(string id)
     {
-        // var result = await _context.Events
         var result = await _eventRepo.FindByIdAsync(id);
 
-        // .Where(e => e.Id == id)
         var bookEvent = new EventBaseViewModel
         {
             Title = result.Title,
@@ -55,20 +51,8 @@ public class EventController : ControllerBase
                 }
             ).ToList()
         };
-        //  }).SingleOrDefaultAsync();
-        // return Ok(bookEvent);
         return Ok(result);
     }
-
-    // [HttpPost]
-    // [Authorize(Roles = "User")]
-    // public async Task<ActionResult<List<Event>>> Add(Event newEvent)
-    // {
-    //     _context.Events.Add(newEvent);
-    //     await _context.SaveChangesAsync();
-
-    //     return Ok(await _context.Events.ToListAsync());
-    // }
 
     [HttpPost]
     // [Authorize(Roles = "User")]
@@ -84,8 +68,6 @@ public class EventController : ControllerBase
             EndDate = newEvent.EndDate,
         };
 
-        // var result = await _eventRepo.AddAsync(bookEvent);
-
         await _eventRepo.AddAsync(bookEvent);
 
         if (await _eventRepo.SaveAsync())
@@ -93,18 +75,12 @@ public class EventController : ControllerBase
             return Created(nameof(GetById), new { id = bookEvent.Id });
         }
         return StatusCode(500, "Internal Server Error");
-
-        // _context.Events.Add(newEvent);
-        // await _context.SaveChangesAsync();
-
-        // return Ok(await _context.Events.ToListAsync());
     }
 
     [HttpPut]
     // [Authorize(Roles = "User")]
     public async Task<ActionResult<List<Event>>> Update(Event request)
     {
-        // var bookEvent = await _context.Events.FindAsync(request.Id);
         var bookEvent = await _eventRepo.FindByIdAsync(request.Id);
         if (bookEvent == null)
             return BadRequest("Event not found.");
@@ -129,7 +105,6 @@ public class EventController : ControllerBase
         if (bookEvent == null)
             return BadRequest("Event not found.");
 
-        // _context.Events.Remove(bookEvent);
         await _eventRepo.DeleteAsync(bookEvent);
         await _eventRepo.SaveAsync();
 
@@ -152,7 +127,6 @@ public class EventController : ControllerBase
     [HttpPatch("join/{eventId}/{userId}")]
     public async Task<IActionResult> Join(string eventId, string userId)
     {
-        // var e = await _context.Events.FindAsync(eventId);
         var e = await _eventRepo.FindByIdAsync(eventId);
         if (e is null) return NotFound($"Bokcirkel med ID {eventId} kunde inte hittas");
 
