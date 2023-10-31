@@ -25,32 +25,6 @@ public class EventRepository : IEventRepository
         }
     }
 
-    public Task<bool> AddBookToEventAsync(Event e)
-    {
-        try
-        {
-            _context.Events.Update(e);
-            return Task.FromResult(true);
-        }
-        catch
-        {
-            return Task.FromResult(false);
-        }
-    }
-
-    public Task<bool> AddBookToLibraryAsync(Event e)
-    {
-        try
-        {
-            _context.Events.Update(e);
-            return Task.FromResult(true);
-        }
-        catch
-        {
-            return Task.FromResult(false);
-        }
-    }
-
     public Task<bool> DeleteAsync(Event e)
     {
         try
@@ -64,14 +38,12 @@ public class EventRepository : IEventRepository
         }
     }
 
-    public async Task<Event?> DetailsAsync(string id)
-    {
-        return await _context.Events.FindAsync(id);
-    }
-
     public async Task<Event?> FindByIdAsync(string id)
     {
-        return await _context.Events.FindAsync(id);
+        return await _context.Events
+        .Where(e => e.Id == id)
+        .Include(e => e.Books)
+        .SingleOrDefaultAsync();
     }
 
     public async Task<IList<Event>> ListAllAsync()
@@ -93,19 +65,6 @@ public class EventRepository : IEventRepository
     }
 
     public Task<bool> UpdateAsync(Event e)
-    {
-        try
-        {
-            _context.Events.Update(e);
-            return Task.FromResult(true);
-        }
-        catch
-        {
-            return Task.FromResult(false);
-        }
-    }
-
-    public Task<bool> UpdatePartialAsync(Event e)
     {
         try
         {

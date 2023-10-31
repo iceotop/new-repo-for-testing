@@ -40,12 +40,20 @@ public class UserRepository : IUserRepository
 
     public async Task<UserModel?> FindByEmailAsync(string email)
     {
-        return await _context.Users.SingleOrDefaultAsync(c => c.Email.Trim().ToLower() == email.Trim().ToLower());
+        return await _context.Users
+            .Where(u => u.Email == email)
+            .Include(u => u.Books)
+            .Include(u => u.Events)
+            .SingleOrDefaultAsync(c => c.Email.Trim().ToLower() == email.Trim().ToLower());
     }
 
     public async Task<UserModel?> FindByIdAsync(string id)
     {
-        return await _context.Users.FindAsync(id);
+        return await _context.Users
+            .Where(u => u.Id == id)
+            .Include(u => u.Books)
+            .Include(u => u.Events)
+            .SingleOrDefaultAsync();
     }
 
     public async Task<IList<UserModel>> ListAllAsync()
@@ -63,6 +71,19 @@ public class UserRepository : IUserRepository
         catch
         {
             return false;
+        }
+    }
+
+    public Task<bool> UpdateAsync(UserModel user)
+    {
+        try
+        {
+            _context.Users.Update(user);
+            return Task.FromResult(true);
+        }
+        catch
+        {
+            return Task.FromResult(false);
         }
     }
 }
