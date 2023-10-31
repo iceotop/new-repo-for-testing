@@ -1,6 +1,6 @@
 using System.Text.Json;
-using api.Models;
 using Microsoft.AspNetCore.Identity;
+using Models;
 
 namespace api.Data;
 public static class SeedData

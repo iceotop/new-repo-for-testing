@@ -1,11 +1,11 @@
 using api.Data;
 using api.Interfaces;
-using api.Models;
 using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using Models;
 
 namespace api.Controllers;
 

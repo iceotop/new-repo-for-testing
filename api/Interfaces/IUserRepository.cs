@@ -1,4 +1,4 @@
-using api.Models;
+using Models;
 
 namespace api.Interfaces;
 public interface IUserRepository

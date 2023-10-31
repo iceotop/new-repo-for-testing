@@ -1,7 +1,7 @@
 using api.Data;
 using api.Interfaces;
-using api.Models;
 using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace api.Repository;
 public class EventRepository : IEventRepository
