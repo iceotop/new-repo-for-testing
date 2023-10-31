@@ -21,7 +21,7 @@ public class EventController : ControllerBase
         _eventRepo = eventRepo;
     }
 
-    // TODO Här skulle vi behöva fixa en ViewModel
+    // TODO Här skulle vi behöva fixa en ViewModel 
     [HttpGet]
     public async Task<ActionResult<List<Event>>> Get()
     {
@@ -142,4 +142,5 @@ public class EventController : ControllerBase
         }
         return StatusCode(500, "Internal Server Error");
     }
+
 }
