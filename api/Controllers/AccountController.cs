@@ -17,16 +17,16 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
     private readonly TokenService _tokenService;
-    private readonly BookCircleContext _context;
+    // private readonly BookCircleContext _context;
+    private readonly IUserRepository _userRepo;
 
-    private readonly IUserRepository _repo;
-
-    public AccountController(UserManager<UserModel> userManager, BookCircleContext context, TokenService tokenService, IUserRepository repo)
+    // public AccountController(UserManager<UserModel> userManager, BookCircleContext context, TokenService tokenService, IUserRepository userRepo)
+    public AccountController(UserManager<UserModel> userManager, TokenService tokenService, IUserRepository userRepo)
     {
-        _repo = repo;
+        _userRepo = userRepo;
         _tokenService = tokenService;
         _userManager = userManager;
-        _context = context;
+        // _context = context;
     }
 
     [HttpPost("login")]
@@ -80,11 +80,13 @@ public class AccountController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var result = await _context.Users
-            .Where(u => u.Id == id)
-            .Include(u => u.Books)
-            .Include(u => u.Events)
-            .SingleOrDefaultAsync();
+        var result = await _userRepo.FindByIdAsync(id);
+
+        // var result = await _context.Users
+        //     .Where(u => u.Id == id)
+        //     .Include(u => u.Books)
+        //     .Include(u => u.Events)
+        //     .SingleOrDefaultAsync();
 
         var user = new ProfileViewModel
         {
@@ -110,24 +112,56 @@ public class AccountController : ControllerBase
                 }).ToList()
         };
         return Ok(user);
+        // return Ok(result);
     }
+
+    // [HttpGet("email")]
+    // public async Task<IActionResult> FindByEmail()
+    // {
+    //     // "User" = property som hör till ControllerBase och hanterar claims
+    //     // FindFirst plockar upp det första claimet som uppnår villkoret
+    //     var emailClaim = User.FindFirst(claim => claim.Type == ClaimTypes.Email);
+    //     string email = emailClaim.Value;
+
+    //     // hämta ur db som vanligt
+    //     var result = await _context.Users
+    //         .Where(u => u.Email == email)
+    //         .Include(u => u.Books)
+    //         .Include(u => u.Events)
+    //         .SingleOrDefaultAsync();
+
+    //     // mappa till viewmodel
+    //     var user = new ProfileViewModel
+    //     {
+    //         FirstName = result.FirstName,
+    //         LastName = result.LastName,
+    //         Books = result.Books!.Select(
+    //             b => new BookBaseViewModel
+    //             {
+    //                 Title = b.Title,
+    //                 Author = b.Author,
+    //                 PublicationYear = b.PublicationYear,
+    //                 Review = b.Review,
+    //                 IsRead = b.IsRead
+    //             }
+    //         ).ToList(),
+    //         Events = result.Events!.Select(
+    //             e => new EventBaseViewModel
+    //             {
+    //                 Title = e.Title,
+    //                 Description = e.Description,
+    //                 StartDate = e.StartDate,
+    //                 EndDate = e.EndDate
+    //             }).ToList()
+    //     };
+    //     return Ok(user);
+    // }
 
     [HttpGet("email")]
-    public async Task<IActionResult> FindByEmail()
+    public async Task<IActionResult> GetByEmail(string email)
     {
-        // "User" = property som hör till ControllerBase och hanterar claims
-        // FindFirst plockar upp det första claimet som uppnår villkoret
-        var emailClaim = User.FindFirst(claim => claim.Type == ClaimTypes.Email);
-        string email = emailClaim.Value;
+        var result = await _userRepo.FindByEmailAsync(email);
 
-        // hämta ur db som vanligt
-        var result = await _context.Users
-            .Where(u => u.Email == email)
-            .Include(u => u.Books)
-            .Include(u => u.Events)
-            .SingleOrDefaultAsync();
-
-        // mappa till viewmodel
         var user = new ProfileViewModel
         {
             FirstName = result.FirstName,
@@ -151,8 +185,10 @@ public class AccountController : ControllerBase
                     EndDate = e.EndDate
                 }).ToList()
         };
+
         return Ok(user);
     }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(string id)
