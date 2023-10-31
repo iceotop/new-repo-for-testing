@@ -2,6 +2,7 @@ using api.Data;
 using api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Repositories;
 
 namespace api.Repository;
 public class BookRepository : IBookRepository
