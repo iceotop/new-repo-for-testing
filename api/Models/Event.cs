@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.PortableExecutable;
 
 namespace api.Models;
 public class Event
@@ -10,9 +12,9 @@ public class Event
     public string Description { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    
+
     public ICollection<UserModel> Users { get; set; } = new List<UserModel>();
 
     // Many-side
-    public ICollection<Book>? Books { get; set; }
+    public ICollection<Book>? Books { get; set; } = new List<Book>();
 }

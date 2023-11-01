@@ -7,14 +7,14 @@ namespace api.Controllers
 {
     [ApiController]
     [Route("api/v1/externalservices")]
-    public partial class ExternalServicesController : ControllerBase
+    public class ExternalServicesController : ControllerBase
     {
-        private readonly IHttpClientFactory  _httpClient;
+        private readonly IHttpClientFactory _httpClient;
         private readonly JsonSerializerOptions _options;
 
         public ExternalServicesController(IHttpClientFactory httpClient)
         {
-             _httpClient = httpClient;
+            _httpClient = httpClient;
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 

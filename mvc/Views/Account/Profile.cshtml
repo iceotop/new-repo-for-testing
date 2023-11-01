@@ -5,13 +5,18 @@
     <ul style="margin: 1em;">
         @foreach (var book in Model.Books){
 
-            <div style="border: 1px solid yellow; display: inline-block; list-style-type: none; padding: 1em;">
-                <img src="@book.ImageUrl" alt="cover image">
-                <li>@book.Title</li>
-                <li>@book.Author</li>
-                <li>@book.PublicationYear</li>
-                <li>@book.Review</li>
-                
+            <div style="border: 1px solid yellow; display: flex; align-items: center; list-style-type: none; padding: 1em;">
+                <div class="book-image">
+                    <img src="@book.ImageUrl" alt="thumbnail">
+                </div>
+
+                <div class="book-info">
+                    <li>@book.Title</li>
+                    <li>@book.Author</li>
+                    <li>@book.PublicationYear</li>
+                    <li>@book.Review</li>
+                    <li>@book.ReadStatus</li>   
+                </div>             
             </div>
             
         }

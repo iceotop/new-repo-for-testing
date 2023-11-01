@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using api.Data;
+using api.Interfaces;
 using api.Models;
 using api.Services;
 using api.ViewModels;
@@ -16,14 +17,13 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
     private readonly TokenService _tokenService;
-    private readonly BookCircleContext _context;
+    private readonly IUserRepository _userRepo;
 
-
-    public AccountController(UserManager<UserModel> userManager, BookCircleContext context, TokenService tokenService)
+    public AccountController(UserManager<UserModel> userManager, TokenService tokenService, IUserRepository userRepo)
     {
+        _userRepo = userRepo;
         _tokenService = tokenService;
         _userManager = userManager;
-        _context = context;
     }
 
     [HttpPost("login")]
@@ -44,7 +44,6 @@ public class AccountController : ControllerBase
             Token = token  // Include the token in the response
         });
     }
-
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterViewModel model)
@@ -77,11 +76,7 @@ public class AccountController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var result = await _context.Users
-            .Where(u => u.Id == id)
-            .Include(u => u.Books)
-            .Include(u => u.Events)
-            .SingleOrDefaultAsync();
+        var result = await _userRepo.FindByIdAsync(id);
 
         var user = new ProfileViewModel
         {
@@ -110,21 +105,15 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("email")]
-    public async Task<IActionResult> FindByEmail()
+    public async Task<IActionResult> GetByEmail()
     {
         // "User" = property som hör till ControllerBase och hanterar claims
         // FindFirst plockar upp det första claimet som uppnår villkoret
         var emailClaim = User.FindFirst(claim => claim.Type == ClaimTypes.Email);
         string email = emailClaim.Value;
 
-        // hämta ur db som vanligt
-        var result = await _context.Users
-            .Where(u => u.Email == email)
-            .Include(u => u.Books)
-            .Include(u => u.Events)
-            .SingleOrDefaultAsync();
+        var result = await _userRepo.FindByEmailAsync(email);
 
-        // mappa till viewmodel
         var user = new ProfileViewModel
         {
             UserName = result.UserName,
@@ -150,6 +139,7 @@ public class AccountController : ControllerBase
                     EndDate = e.EndDate
                 }).ToList()
         };
+
         return Ok(user);
     }
 

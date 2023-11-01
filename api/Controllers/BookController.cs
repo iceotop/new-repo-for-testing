@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using api.Data;
+using api.Interfaces;
 using api.Models;
 using api.Models.DTOs;
 using api.ViewModels;
@@ -14,18 +15,22 @@ namespace api.Controllers;
 [Route("api/v1/books")]
 public class BookController : ControllerBase
 {
-    private readonly BookCircleContext _context;
+    private readonly IBookRepository _bookRepo;
+    private readonly IUserRepository _userRepo;
+    private readonly IEventRepository _eventRepo;
 
-    public BookController(BookCircleContext context)
+    public BookController(IBookRepository bookRepo, IUserRepository userRepo, IEventRepository eventRepo)
     {
-        _context = context;
+        _eventRepo = eventRepo;
+        _userRepo = userRepo;
+        _bookRepo = bookRepo;
     }
 
     // Display all books
     [HttpGet]
-    public IActionResult ListAllBooks()
+    public async Task<IActionResult> ListAllBooksAsync()
     {
-        var list = _context.Books.ToList();
+        var list = await _bookRepo.ListAllAsync();
 
         if (list is []) return NotFound($"Böcker kunde inte hittas");
 
@@ -38,25 +43,29 @@ public class BookController : ControllerBase
     // [Authorize(Roles = "User, Admin")] - Om man vill lägga till flera roller
     public async Task<ActionResult> GetById(string id)
     {
-        var result = await _context.Books.Select(b => new
+        var result = await _bookRepo.FindByIdAsync(id);
+
+        if (result == null)
         {
-            Id = b.Id,
-            Title = b.Title,
-            Author = b.Author,
-            PublicationYear = b.PublicationYear,
-            Review = b.Review,
-            IsRead = b.ReadStatus
-        })
-        .SingleOrDefaultAsync(b => b.Id == id);
+            return NotFound($"Boken med ID {id} kunde inte hittas");
+        }
 
-        if (result is null) return BadRequest($"Boken med ID {id} kunde inte hittas");
+         var book = new
+        {
+            Id = result.Id,
+            Title = result.Title,
+            Author = result.Author,
+            PublicationYear = result.PublicationYear,
+            Review = result.Review,
+            ReadStatus = result.ReadStatus
+        };
 
-        return Ok(result);
+        return Ok(book);
     }
 
-    // Add a new book
+     // Add a new book
     [HttpPost()]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult> Create(BookBaseViewModel model)
     {
         var book = new Book
@@ -69,9 +78,9 @@ public class BookController : ControllerBase
             ReadStatus = model.ReadStatus
         };
 
-        await _context.Books.AddAsync(book);
+        await _bookRepo.AddAsync(book);
 
-        if (await _context.SaveChangesAsync() > 0)
+        if (await _bookRepo.SaveAsync())
         {
             return Created(nameof(GetById), new { id = book.Id });
         }
@@ -80,10 +89,10 @@ public class BookController : ControllerBase
 
     // Edit a book
     [HttpPut("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> EditBook(string id, [FromBody] Book updatedBook)
     {
-        var existingBook = await _context.Books.FindAsync(id);
+        var existingBook = await _bookRepo.FindByIdAsync(id);
 
         if (existingBook is null) return NotFound($"Bok ({id}) finns inte i systemet");
 
@@ -93,8 +102,8 @@ public class BookController : ControllerBase
         existingBook.Review = updatedBook.Review;
         existingBook.ReadStatus = updatedBook.ReadStatus;
 
-        _context.Books.Update(existingBook);
-        if (await _context.SaveChangesAsync() > 0)
+        await _bookRepo.UpdateAsync(existingBook);
+        if (await _bookRepo.SaveAsync())
         {
             return Ok(existingBook);
         }
@@ -102,17 +111,20 @@ public class BookController : ControllerBase
     }
 
     // Add a book to an event
-    [HttpPatch("{bookId}/{eventId}")]
-    [Authorize(Roles = "User")]
+    [HttpPatch("addtoevent/{bookId}/{eventId}")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> AddToEvent(string bookId, string eventId)
     {
-        var book = await _context.Books.FindAsync(bookId);
+        var book = await _bookRepo.FindByIdAsync(bookId);
         if (book is null) return NotFound($"Boken med ID {bookId} kunde inte hittas");
 
-        book.EventId = eventId;
-        _context.Books.Update(book);
+        var bookEvent = await _eventRepo.FindByIdAsync(eventId);
+        if (bookEvent is null) return NotFound($"Eventet med ID {eventId} kunde inte hittas");
 
-        if (await _context.SaveChangesAsync() > 0)
+        bookEvent.Books.Add(book);
+        await _eventRepo.UpdateAsync(bookEvent);
+
+        if (await _eventRepo.SaveAsync())
         {
             return NoContent();
         }
@@ -132,10 +144,7 @@ public class BookController : ControllerBase
         string email = emailClaim.Value;
 
         // Fetch the user from the database
-        var user = await _context.Users
-            .Where(u => u.Email == email)
-            .Include(u => u.Books)
-            .SingleOrDefaultAsync();
+        var user = await _userRepo.FindByEmailAsync(email);
 
         if (user == null)
         {
@@ -158,11 +167,11 @@ public class BookController : ControllerBase
         user.Books.Add(newBook);
 
         // Update the user in the database
-        _context.Users.Update(user);
+        await _userRepo.UpdateAsync(user);
         
 
         // Save changes
-        if (await _context.SaveChangesAsync() > 0)
+        if (await _userRepo.SaveAsync())
         {
             return NoContent();
         }
@@ -173,15 +182,16 @@ public class BookController : ControllerBase
 
     // Remove a book
     [HttpDelete("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> RemoveBook(string id)
     {
-        var existingBook = await _context.Books.FindAsync(id);
+        var existingBook = await _bookRepo.FindByIdAsync(id);
 
         if (existingBook is null) return NotFound($"Bok ({id}) kunde inte hittas");
 
-        _context.Books.Remove(existingBook);
-        if (await _context.SaveChangesAsync() > 0)
+        await _bookRepo.DeleteAsync(existingBook);
+
+        if (await _bookRepo.SaveAsync())
         {
             return NoContent();
         }

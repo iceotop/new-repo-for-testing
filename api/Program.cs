@@ -1,6 +1,8 @@
 using System.Text;
 using api.Data;
+using api.Interfaces;
 using api.Models;
+using api.Repository;
 using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -33,6 +35,11 @@ builder.Services.AddHttpClient("GoogleBooks", c =>
 builder.Services.AddDbContext<BookCircleContext>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"))
 );
+
+// Add dependency injection
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Setup av JWT
 builder.Services.AddIdentityCore<UserModel>()

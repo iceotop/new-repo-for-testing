@@ -26,8 +26,8 @@ namespace mvc.ViewModels.Event;
         public string Description { get; set; } = "";
 
         [DisplayName("StartDate")]
-        public string StartDate { get; set; } = "";
+        public DateTime StartDate { get; set; }
 
         [DisplayName("EndDate")]
-        public string EndDate { get; set; } = "";
+        public DateTime EndDate { get; set; }
     }
