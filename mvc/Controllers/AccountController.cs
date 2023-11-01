@@ -40,8 +40,13 @@ public class AccountController : Controller
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginViewModel model)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(model); // Return the same view to display errors
+        }
+
         using var client = _httpClient.CreateClient();
-        var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"); //body
 
         var response = await client.PostAsync($"{_baseUrl}/account/login", content); // posta login-input till login-endpoint i api
 
@@ -51,7 +56,7 @@ public class AccountController : Controller
             var userViewModel = JsonSerializer.Deserialize<UserViewModel>(jsonResponse); // deserialisera json-responsen i UserViewModel. OBS case-sensitive
 
             // Lagra JWT i en säker cookie med namnet "access_token"
-            Response.Cookies.Append("access_token", userViewModel.token, new CookieOptions
+            Response.Cookies.Append("access_token", userViewModel.Token, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
@@ -59,8 +64,9 @@ public class AccountController : Controller
             });
             return RedirectToAction("Profile");
         }
+        
         ModelState.AddModelError(string.Empty, "Invalid login attempt");
-        return RedirectToAction("Login");
+        return View("Login", model);
     }
 
     [HttpGet("profile")]
@@ -78,17 +84,78 @@ public class AccountController : Controller
         return View("Profile", profile);
     }
 
-    [HttpGet("details/{id}")]
-    public async Task<IActionResult> Details(string id)
+    [HttpGet("register")]
+    public IActionResult Register()
     {
-        using var client = _httpClient.CreateClient();
-        var response = await client.GetAsync($"{_baseUrl}/account/{id}");
-        if (!response.IsSuccessStatusCode) return Content("Fel");
-
-        var json = await response.Content.ReadAsStringAsync();
-        var profile = JsonSerializer.Deserialize<ProfileViewModel>(json, _options);
-
-        return View("Profile", profile);
+        return View("Register");
     }
 
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        using var client = _httpClient.CreateClient();
+        var content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync($"{_baseUrl}/account/register", content);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return RedirectToAction("Login");
+        }
+
+        // Read the response content and deserialize it into a dictionary
+        var errorContent = await response.Content.ReadAsStringAsync();
+        var jsonDoc = JsonDocument.Parse(errorContent);
+        var errorsElement = jsonDoc.RootElement.GetProperty("errors");
+        var errors = JsonSerializer.Deserialize<Dictionary<string, string[]>>(errorsElement.GetRawText());
+
+        // Add the errors to the ModelState
+        if (errors != null)
+        {
+            foreach (var error in errors)
+            {
+                foreach (var detail in error.Value)
+                {
+                    ModelState.AddModelError(error.Key, detail);
+                }
+            }
+        }
+        else
+        {
+            ModelState.AddModelError(string.Empty, "Registration failed");
+        }
+
+        return View("Register", model);
+    }
+
+
+    [HttpGet("logout")]
+    public IActionResult Logout()
+    {
+        // Remove the JWT token cookie
+        Response.Cookies.Delete("access_token");
+
+        // Remove the anti-forgery cookie
+        Response.Cookies.Delete(".AspNetCore.Antiforgery.rlXYCFrAyI4");
+
+        // Redirect to home page or login page
+        return RedirectToAction("Index", "Home");
+    }
+
+
 }
+
+
+
+
+    // [HttpGet("details/{id}")]
+    // public async Task<IActionResult> Details(string id)
+    // {
+    //     using var client = _httpClient.CreateClient();
+    //     var response = await client.GetAsync($"{_baseUrl}/account/{id}");
+    //     if (!response.IsSuccessStatusCode) return Content("Fel");
+
+    //     var json = await response.Content.ReadAsStringAsync();
+    //     var profile = JsonSerializer.Deserialize<ProfileViewModel>(json, _options);
+
+    //     return View("Profile", profile);
+    // }

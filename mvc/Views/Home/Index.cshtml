@@ -1,4 +1,13 @@
 ﻿<div id="bookCircleContainer" class="half-container"></div>
+
+<div id="bookReviewContainer" class="half-container">
+  @* @if (User.IsInRole("Admin"))
+    { *@
+        <a asp-controller="search" asp-action="index" class="log-book-button">Log book</a>
+    @* } *@
+</div>
+
+@* <div id="bookCircleContainer" class="half-container"></div>
 <div id="bookReviewContainer" class="half-container"></div>
 
 <!-- Modal overlay -->
@@ -23,8 +32,8 @@
     <button class="close-button" id="closeModal2">X</button>
 
     <div id="formContainer" class="modal-content">
-      <img id="bookImage" src="" alt="bokbild hamnar här"/>
       <form id="bookForm">
+        <img id="bookImage" src="" alt="bokbild hamnar här"/>
         <div class="book-metadata">
           <div id="bookTitle"></div>
           <div id="bookYear"></div>
@@ -70,4 +79,4 @@
     </form>
     <button onclick="submitRegistrationForm()">Register</button>
   </div>
-</div>
+</div> *@

@@ -69,7 +69,7 @@ public class AccountController : ControllerBase
             return ValidationProblem();
         }
 
-        await _userManager.AddToRoleAsync(user, "Admin");
+        await _userManager.AddToRoleAsync(user, "User");
 
         return StatusCode(201);
     }
@@ -94,7 +94,7 @@ public class AccountController : ControllerBase
                     Author = b.Author,
                     PublicationYear = b.PublicationYear,
                     Review = b.Review,
-                    IsRead = b.IsRead
+                    ReadStatus = b.ReadStatus
                 }
             ).ToList(),
             Events = result.Events!.Select(
@@ -127,16 +127,18 @@ public class AccountController : ControllerBase
         // mappa till viewmodel
         var user = new ProfileViewModel
         {
+            UserName = result.UserName,
             FirstName = result.FirstName,
             LastName = result.LastName,
             Books = result.Books!.Select(
                 b => new BookBaseViewModel
                 {
+                    ImageUrl = b.ImageUrl,
                     Title = b.Title,
                     Author = b.Author,
                     PublicationYear = b.PublicationYear,
                     Review = b.Review,
-                    IsRead = b.IsRead
+                    ReadStatus = b.ReadStatus
                 }
             ).ToList(),
             Events = result.Events!.Select(

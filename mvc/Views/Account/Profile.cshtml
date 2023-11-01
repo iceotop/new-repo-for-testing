@@ -1,10 +1,19 @@
 @model mvc.ViewModels.Account.ProfileViewModel
 
 <section class="page-content">
-    <h1>@Model.FirstName @Model.LastName</h1>
-    <ul>
+    <h1>User: @Model.UserName (@Model.FirstName @Model.LastName)</h1>
+    <ul style="margin: 1em;">
         @foreach (var book in Model.Books){
-            <li>@book.Title</li>
+
+            <div style="border: 1px solid yellow; display: inline-block; list-style-type: none; padding: 1em;">
+                <img src="@book.ImageUrl" alt="cover image">
+                <li>@book.Title</li>
+                <li>@book.Author</li>
+                <li>@book.PublicationYear</li>
+                <li>@book.Review</li>
+                
+            </div>
+            
         }
     </ul>
 </section>

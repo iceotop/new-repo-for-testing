@@ -1,6 +1,19 @@
 @model mvc.ViewModels.Account.LoginViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
+<style>
+.error {
+    color: var(--error-text);
+}
+</style>
+
+@{
+    if (!ViewData.ModelState.IsValid)
+    {
+        <div class="error">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        </div>
+    }
+}
 
 <section>
     <h1>Logga in</h1>
@@ -8,12 +21,12 @@
         <div>
             <label asp-for="UserName"></label>
             <input asp-for="UserName">
-            <span asp-validation-for="UserName"></span>
+            <span class="error" asp-validation-for="UserName"></span>
         </div>
         <div>
             <label asp-for="Password"></label>
             <input asp-for="Password">
-            <span asp-validation-for="Password"></span>
+            <span class="error" asp-validation-for="Password"></span>
         </div>
         <div>
             <button type="Submit">Logga in</button>

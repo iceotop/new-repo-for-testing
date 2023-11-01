@@ -48,4 +48,14 @@ public class TokenService
 
         return new JwtSecurityTokenHandler().WriteToken(options);
     }
+
+    public string DecodeToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+        var claims = jwtToken.Claims;
+        var usernameClaim = claims.FirstOrDefault(claim => claim.Type == "unique_name");
+
+        return usernameClaim?.Value;
+    }
 }

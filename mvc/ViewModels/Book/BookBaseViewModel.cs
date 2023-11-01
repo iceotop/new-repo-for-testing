@@ -1,4 +1,4 @@
-namespace api.ViewModels;
+namespace mvc.ViewModels;
 
 public class BookBaseViewModel
 {

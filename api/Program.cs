@@ -80,6 +80,7 @@ try
     await SeedData.LoadRolesAndUsers(userMgr, roleMgr);
     await SeedData.LoadBooksData(context);
     await SeedData.LoadEventsData(context);
+    
 }
 catch (Exception ex)
 {

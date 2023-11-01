@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using api.Data;
 using api.Models;
+using api.Models.DTOs;
 using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +45,7 @@ public class BookController : ControllerBase
             Author = b.Author,
             PublicationYear = b.PublicationYear,
             Review = b.Review,
-            IsRead = b.IsRead
+            IsRead = b.ReadStatus
         })
         .SingleOrDefaultAsync(b => b.Id == id);
 
@@ -64,7 +66,7 @@ public class BookController : ControllerBase
             Author = model.Author,
             PublicationYear = model.PublicationYear,
             Review = model.Review,
-            IsRead = model.IsRead
+            ReadStatus = model.ReadStatus
         };
 
         await _context.Books.AddAsync(book);
@@ -89,7 +91,7 @@ public class BookController : ControllerBase
         existingBook.Author = updatedBook.Author;
         existingBook.PublicationYear = updatedBook.PublicationYear;
         existingBook.Review = updatedBook.Review;
-        existingBook.IsRead = updatedBook.IsRead;
+        existingBook.ReadStatus = updatedBook.ReadStatus;
 
         _context.Books.Update(existingBook);
         if (await _context.SaveChangesAsync() > 0)
@@ -117,24 +119,57 @@ public class BookController : ControllerBase
         return StatusCode(500, "Internal Server Error");
     }
 
-    [HttpPatch("addtolibrary/{bookId}/{userId}")]
-    public async Task<IActionResult> AddToLibrary(string bookId, string userId)
+    [HttpPatch("addtolibrary")]
+    public async Task<IActionResult> AddToLibrary([FromBody] AddBookDto book)
     {
-        var book = await _context.Books.FindAsync(bookId);
-        if (book is null) return NotFound($"Boken med ID {bookId} kunde inte hittas");
+        // Extract the email from the token in the header
+        var emailClaim = User.FindFirst(claim => claim.Type == ClaimTypes.Email);
+        if (emailClaim == null)
+        {
+            return Unauthorized("No email claim found in token");
+        }
 
-        var user = await _context.Users.FindAsync(userId);
-        if (user is null) return NotFound($"Användare med ID {userId} kunde inte hittas");
+        string email = emailClaim.Value;
 
-        user.Books.Add(book);
+        // Fetch the user from the database
+        var user = await _context.Users
+            .Where(u => u.Email == email)
+            .Include(u => u.Books)
+            .SingleOrDefaultAsync();
+
+        if (user == null)
+        {
+            return NotFound($"User with email {email} could not be found");
+        }
+
+        // Convert the incoming book DTO to your Book model
+        var newBook = new Book
+        {
+            Id = Guid.NewGuid().ToString(),
+            Title = book.Title,
+            Author = book.Author,
+            PublicationYear = book.PublicationYear,
+            Review = book.Review,
+            ReadStatus = book.ReadStatus,
+            ImageUrl = book.ImageUrl
+        };
+
+        // Add the new book to the user's Books collection
+        user.Books.Add(newBook);
+
+        // Update the user in the database
         _context.Users.Update(user);
+        
 
+        // Save changes
         if (await _context.SaveChangesAsync() > 0)
         {
             return NoContent();
         }
+
         return StatusCode(500, "Internal Server Error");
     }
+
 
     // Remove a book
     [HttpDelete("{id}")]

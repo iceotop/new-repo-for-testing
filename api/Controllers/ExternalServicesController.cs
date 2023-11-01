@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using mvc.Controllers;
+using static api.Models.DTOs.ExternalServicesController;
 
 namespace api.Controllers
 {
     [ApiController]
     [Route("api/v1/externalservices")]
-    public class ExternalServicesController : ControllerBase
+    public partial class ExternalServicesController : ControllerBase
     {
         private readonly IHttpClientFactory  _httpClient;
         private readonly JsonSerializerOptions _options;
@@ -38,6 +33,7 @@ namespace api.Controllers
             {
                 var googleBooksResponse = await JsonSerializer.DeserializeAsync<GoogleBooksResponse>(responseStream, _options);
                 var books = googleBooksResponse?.Items.Select(item => new BookDto {
+                    Id = item.Id,
                     Title = item.VolumeInfo.Title,
                     Author = item.VolumeInfo.Authors?.FirstOrDefault(),
                     PublicationYear = item.VolumeInfo.PublishedDate,
@@ -52,37 +48,34 @@ namespace api.Controllers
             }
         }
 
-        public class BookDto
+        [HttpGet("book/{id}")]
+        public async Task<IActionResult> GetBookById(string id)
         {
-            public string Title { get; set; }
-            public string Author { get; set; }
-            public string PublicationYear { get; set; }
-            public string ImageUrl { get; set; }
-        }
+            var client = _httpClient.CreateClient("GoogleBooks");
+            var response = await client.GetAsync($"volumes/{Uri.EscapeDataString(id)}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return StatusCode((int)response.StatusCode, "Failed to retrieve data from external API.");
+            }
+            var responseStream = await response.Content.ReadAsStreamAsync();
 
+            try
+            {
+                var googleBookResponse = await JsonSerializer.DeserializeAsync<GoogleBookItem>(responseStream, _options);
+                var book = new BookDto
+                {
+                    Title = googleBookResponse.VolumeInfo.Title,
+                    Author = googleBookResponse.VolumeInfo.Authors?.FirstOrDefault(),
+                    PublicationYear = googleBookResponse.VolumeInfo.PublishedDate,
+                    ImageUrl = googleBookResponse.VolumeInfo.ImageLinks?.Thumbnail
+                };
 
-//------classes to handle response from google books api
-        public class GoogleBooksResponse
-        {
-            public List<GoogleBookItem> Items { get; set; }
-        }
-
-        public class GoogleBookItem
-        {
-            public VolumeInfo VolumeInfo { get; set; }
-        }
-
-        public class VolumeInfo
-        {
-            public string Title { get; set; }
-            public List<string> Authors { get; set; }
-            public string PublishedDate { get; set; }
-            public ImageLinks ImageLinks { get; set; }
-        }
-
-        public class ImageLinks
-        {
-            public string Thumbnail { get; set; }
+                return Ok(book);
+            }
+            catch (JsonException ex)
+            {
+                return BadRequest("Failed to deserialize the response from the external API: " + ex.Message);
+            }
         }
     }
 }
