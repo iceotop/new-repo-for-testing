@@ -52,6 +52,11 @@ namespace mvc.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> Create(BookPostViewModel book)
         {
+            if (book.Review == null)
+            {
+                book.Review = "";
+            }
+
             // Read the token from the cookie
             var token = Request.Cookies["access_token"];
 

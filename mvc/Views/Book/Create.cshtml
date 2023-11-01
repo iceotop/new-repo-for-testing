@@ -4,24 +4,30 @@
 @{
     Model.PublicationYear = Model.PublicationYear?.Substring(0, 4);
 }
+<h1 id="instruction-text">STEP 3: LOG BOOK</h1>
 
-<form asp-action="Create" asp-controller="Book" method="post">
-    <img src="@Model.ImageUrl" alt="Book image here"/>
+<form id="bookForm" asp-action="Create" asp-controller="Book" method="post">
+    <div id="bookImage">
+        <img src="@Model.ImageUrl" alt="Book image here"/>
+    </div>
     <input type="hidden" name="ImageUrl" value="@Model.ImageUrl" />
     <div class="book-metadata">
         <input type="hidden" asp-for="@Model.Title" />
         <input type="hidden" asp-for="@Model.Author" />
         <input type="hidden" asp-for="@Model.PublicationYear" />
-        <div>@Model.Title</div>
-        <div>@Model.PublicationYear</div>
-        <div>@Model.Author</div>
+        <div class="book-metadata">   
+            <div id="bookTitle">@Model.Title</div>
+            <div id="bookYear">@Model.PublicationYear</div>
+            <div id="bookAuthor">@Model.Author</div>
+        </div> 
     </div>
-    <textarea name="Review" placeholder="Write your review here (optional)"></textarea>
+    <textarea id="bookReview" name="Review" placeholder="Write your review here (optional)"></textarea>
     <div class="radio-buttons">
-        <input type="radio" name="ReadStatus" value="Want to read" checked>
-        <label for="wantToRead">Want to read</label>
-        <input type="radio" name="ReadStatus" value="Have read">
-        <label for="haveRead">Have read</label>
+        <input class="radio-buttons" type="radio" name="ReadStatus" value="Want to read" checked>
+        <label class="radio-buttons" for="wantToRead">Want to read</label>
+        <input class="radio-buttons" type="radio" name="ReadStatus" value="Have read">
+        <label class="radio-buttons" for="haveRead">Have read</label>
     </div>
     <button type="submit">Submit</button>
 </form>
+

@@ -171,9 +171,9 @@
 
 #bookForm {
   width: 50%;
-  flex: 1;
   display: flex;
   flex-direction: column;
+  margin: auto;
 }
 
 /* Put title, year, and author in the same row */
@@ -183,7 +183,7 @@
   justify-content: start;
 
 }
-
+/*CSS for the form in STEP 3*/
 #bookTitle, #bookYear, #bookAuthor {
   border: none;
   background: none;
@@ -263,6 +263,7 @@ button[type="submit"] {
   cursor: pointer;
   align-self: flex-end;
   transition: background-color 0.3s ease;
+  margin: 2em 5em 1em 1em;
 }
 
 button[type="submit"]:hover {
