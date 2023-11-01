@@ -26,32 +26,6 @@ public class BookRepository : IBookRepository
         }
     }
 
-    public Task<bool> AddBookToEventAsync(Book book)
-    {
-        try
-        {
-            _context.Books.Update(book);
-            return Task.FromResult(true);
-        }
-        catch
-        {
-            return Task.FromResult(false);
-        }
-    }
-
-    public Task<bool> AddBookToLibraryAsync(Book book)
-    {
-        try
-        {
-            _context.Books.Update(book);
-            return Task.FromResult(true);
-        }
-        catch
-        {
-            return Task.FromResult(false);
-        }
-    }
-
     public async Task<Book?> FindByIdAsync(string id)
     {
         return await _context.Books.FindAsync(id);

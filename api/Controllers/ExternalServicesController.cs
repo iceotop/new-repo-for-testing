@@ -12,7 +12,7 @@ namespace api.Controllers
 {
     [ApiController]
     [Route("api/v1/externalservices")]
-    public class ExternalServicesController : ControllerBase
+    public partial class ExternalServicesController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClient;
         private readonly JsonSerializerOptions _options;
@@ -51,39 +51,6 @@ namespace api.Controllers
             {
                 return BadRequest("Failed to deserialize the response from the external API: " + ex.Message);
             }
-        }
-
-        public class BookDto
-        {
-            public string Title { get; set; }
-            public string Author { get; set; }
-            public string PublicationYear { get; set; }
-            public string ImageUrl { get; set; }
-        }
-
-
-        //------classes to handle response from google books api
-        public class GoogleBooksResponse
-        {
-            public List<GoogleBookItem> Items { get; set; }
-        }
-
-        public class GoogleBookItem
-        {
-            public VolumeInfo VolumeInfo { get; set; }
-        }
-
-        public class VolumeInfo
-        {
-            public string Title { get; set; }
-            public List<string> Authors { get; set; }
-            public string PublishedDate { get; set; }
-            public ImageLinks ImageLinks { get; set; }
-        }
-
-        public class ImageLinks
-        {
-            public string Thumbnail { get; set; }
         }
     }
 }
