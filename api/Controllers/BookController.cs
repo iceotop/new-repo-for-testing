@@ -1,11 +1,7 @@
-using api.Data;
 using api.Interfaces;
 using api.Models;
 using api.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace api.Controllers;
 
@@ -13,21 +9,22 @@ namespace api.Controllers;
 [Route("api/v1/books")]
 public class BookController : ControllerBase
 {
-    private readonly BookCircleContext _context;
-    private readonly IBookRepository _repo;
+    private readonly IBookRepository _bookRepo;
+    private readonly IUserRepository _userRepo;
+    private readonly IEventRepository _eventRepo;
 
-    public BookController(BookCircleContext context, IBookRepository repo)
+    public BookController(IBookRepository bookRepo, IUserRepository userRepo, IEventRepository eventRepo)
     {
-        _repo = repo;
-        _context = context;
+        _eventRepo = eventRepo;
+        _userRepo = userRepo;
+        _bookRepo = bookRepo;
     }
 
     // Display all books
     [HttpGet]
     public async Task<IActionResult> ListAllBooks()
     {
-        // var list = await _context.Books.ToListAsync();
-        var list = await _repo.ListAllAsync();
+        var list = await _bookRepo.ListAllAsync();
 
         if (list is []) return NotFound($"Böcker kunde inte hittas");
 
@@ -36,29 +33,33 @@ public class BookController : ControllerBase
 
     // Hämta enskild bok på ID
     [HttpGet("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     // [Authorize(Roles = "User, Admin")] - Om man vill lägga till flera roller
-    public async Task<ActionResult> GetById(string id)
+    public async Task<IActionResult> GetById(string id)
     {
-        var result = await _context.Books.Select(b => new
+        var result = await _bookRepo.FindByIdAsync(id);
+
+        if (result == null)
         {
-            Id = b.Id,
-            Title = b.Title,
-            Author = b.Author,
-            PublicationYear = b.PublicationYear,
-            Review = b.Review,
-            IsRead = b.IsRead
-        })
-        .SingleOrDefaultAsync(b => b.Id == id);
+            return NotFound($"Boken med ID {id} kunde inte hittas");
+        }
 
-        if (result is null) return BadRequest($"Boken med ID {id} kunde inte hittas");
+        var book = new
+        {
+            Id = result.Id,
+            Title = result.Title,
+            Author = result.Author,
+            PublicationYear = result.PublicationYear,
+            Review = result.Review,
+            IsRead = result.IsRead
+        };
 
-        return Ok(result);
+        return Ok(book);
     }
 
     // Add a new book
     [HttpPost()]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<ActionResult> Create(BookBaseViewModel model)
     {
         var book = new Book
@@ -71,10 +72,9 @@ public class BookController : ControllerBase
             IsRead = model.IsRead
         };
 
-        // await _context.Books.AddAsync(book);
-        await _context.Books.AddAsync(book);
+        await _bookRepo.AddAsync(book);
 
-        if (await _context.SaveChangesAsync() > 0)
+        if (await _bookRepo.SaveAsync())
         {
             return Created(nameof(GetById), new { id = book.Id });
         }
@@ -83,10 +83,10 @@ public class BookController : ControllerBase
 
     // Edit a book
     [HttpPut("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> EditBook(string id, [FromBody] Book updatedBook)
     {
-        var existingBook = await _context.Books.FindAsync(id);
+        var existingBook = await _bookRepo.FindByIdAsync(id);
 
         if (existingBook is null) return NotFound($"Bok ({id}) finns inte i systemet");
 
@@ -96,8 +96,8 @@ public class BookController : ControllerBase
         existingBook.Review = updatedBook.Review;
         existingBook.IsRead = updatedBook.IsRead;
 
-        _context.Books.Update(existingBook);
-        if (await _context.SaveChangesAsync() > 0)
+        await _bookRepo.UpdateAsync(existingBook);
+        if (await _bookRepo.SaveAsync())
         {
             return Ok(existingBook);
         }
@@ -105,36 +105,40 @@ public class BookController : ControllerBase
     }
 
     // Add a book to an event
-    [HttpPatch("{bookId}/{eventId}")]
-    [Authorize(Roles = "User")]
+    [HttpPatch("addtoevent/{bookId}/{eventId}")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> AddToEvent(string bookId, string eventId)
     {
-        var book = await _context.Books.FindAsync(bookId);
+        var book = await _bookRepo.FindByIdAsync(bookId);
         if (book is null) return NotFound($"Boken med ID {bookId} kunde inte hittas");
 
-        book.EventId = eventId;
-        _context.Books.Update(book);
+        var bookEvent = await _eventRepo.FindByIdAsync(eventId);
+        if (bookEvent is null) return NotFound($"Eventet med ID {eventId} kunde inte hittas");
 
-        if (await _context.SaveChangesAsync() > 0)
+        bookEvent.Books.Add(book);
+        await _eventRepo.UpdateAsync(bookEvent);
+
+        if (await _eventRepo.SaveAsync())
         {
             return NoContent();
         }
         return StatusCode(500, "Internal Server Error");
     }
 
+    // Add a book to a user's library
     [HttpPatch("addtolibrary/{bookId}/{userId}")]
     public async Task<IActionResult> AddToLibrary(string bookId, string userId)
     {
-        var book = await _context.Books.FindAsync(bookId);
+        var book = await _bookRepo.FindByIdAsync(bookId);
         if (book is null) return NotFound($"Boken med ID {bookId} kunde inte hittas");
 
-        var user = await _context.Users.FindAsync(userId);
+        var user = await _userRepo.FindByIdAsync(userId);
         if (user is null) return NotFound($"Användare med ID {userId} kunde inte hittas");
 
         user.Books.Add(book);
-        _context.Users.Update(user);
+        await _userRepo.UpdateAsync(user);
 
-        if (await _context.SaveChangesAsync() > 0)
+        if (await _userRepo.SaveAsync())
         {
             return NoContent();
         }
@@ -143,15 +147,16 @@ public class BookController : ControllerBase
 
     // Remove a book
     [HttpDelete("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     public async Task<IActionResult> RemoveBook(string id)
     {
-        var existingBook = await _context.Books.FindAsync(id);
+        var existingBook = await _bookRepo.FindByIdAsync(id);
 
         if (existingBook is null) return NotFound($"Bok ({id}) kunde inte hittas");
 
-        _context.Books.Remove(existingBook);
-        if (await _context.SaveChangesAsync() > 0)
+        await _bookRepo.DeleteAsync(existingBook);
+
+        if (await _bookRepo.SaveAsync())
         {
             return NoContent();
         }
