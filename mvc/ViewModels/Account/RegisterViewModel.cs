@@ -6,7 +6,7 @@ namespace mvc.ViewModels.Account;
 public class RegisterViewModel
 {
     [Required(ErrorMessage = "Användarnamn Saknas")]
-    [EmailAddress(ErrorMessage = "Felaktigt Användarnamn")]
+    // [EmailAddress(ErrorMessage = "Felaktigt Användarnamn")]
     [DisplayName("Användarnamn")]
     public string? UserName { get; set; }
 

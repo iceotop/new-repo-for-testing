@@ -89,6 +89,12 @@
     box-shadow: 0 5px #666;
     transform: translateY(4px);
   }
+
+  .navbar-profile:active {
+    background-color: #004085; /* Even darker on active/click */
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }
   
   .navbar-buttons {
     display: flex;

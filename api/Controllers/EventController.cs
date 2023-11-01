@@ -47,7 +47,7 @@ public class EventController : ControllerBase
                     Author = b.Author,
                     PublicationYear = b.PublicationYear,
                     Review = b.Review,
-                    IsRead = b.IsRead
+                    ReadStatus = b.ReadStatus
                 }
             ).ToList()
         };

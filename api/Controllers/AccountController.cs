@@ -12,7 +12,7 @@ using SQLitePCL;
 
 namespace api.Controllers;
 [ApiController]
-// [Route("api/v1/account")]
+[Route("api/v1/account")]
 public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
@@ -68,7 +68,7 @@ public class AccountController : ControllerBase
             return ValidationProblem();
         }
 
-        await _userManager.AddToRoleAsync(user, "Admin");
+        await _userManager.AddToRoleAsync(user, "User");
 
         return StatusCode(201);
     }
@@ -89,7 +89,7 @@ public class AccountController : ControllerBase
                     Author = b.Author,
                     PublicationYear = b.PublicationYear,
                     Review = b.Review,
-                    IsRead = b.IsRead
+                    ReadStatus = b.ReadStatus
                 }
             ).ToList(),
             Events = result.Events!.Select(
@@ -105,22 +105,29 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("email")]
-    public async Task<IActionResult> GetByEmail(string email)
+    public async Task<IActionResult> GetByEmail()
     {
+        // "User" = property som hör till ControllerBase och hanterar claims
+        // FindFirst plockar upp det första claimet som uppnår villkoret
+        var emailClaim = User.FindFirst(claim => claim.Type == ClaimTypes.Email);
+        string email = emailClaim.Value;
+
         var result = await _userRepo.FindByEmailAsync(email);
 
         var user = new ProfileViewModel
         {
+            UserName = result.UserName,
             FirstName = result.FirstName,
             LastName = result.LastName,
             Books = result.Books!.Select(
                 b => new BookBaseViewModel
                 {
+                    ImageUrl = b.ImageUrl,
                     Title = b.Title,
                     Author = b.Author,
                     PublicationYear = b.PublicationYear,
                     Review = b.Review,
-                    IsRead = b.IsRead
+                    ReadStatus = b.ReadStatus
                 }
             ).ToList(),
             Events = result.Events!.Select(

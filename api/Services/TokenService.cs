@@ -42,10 +42,20 @@ public class TokenService
             audience: null,
             claims: claims,
             //Ändra?
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddHours(24),
             signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(options);
+    }
+
+    public string DecodeToken(string token)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwtToken = handler.ReadJwtToken(token);
+        var claims = jwtToken.Claims;
+        var usernameClaim = claims.FirstOrDefault(claim => claim.Type == "unique_name");
+
+        return usernameClaim?.Value;
     }
 }

@@ -1,3 +1,26 @@
+@using System.IdentityModel.Tokens.Jwt
+@using System.Linq
+@using System.Security.Claims
+
+@{
+    string username = "Guest"; // Default username
+    var jwtToken = Context.Request.Cookies["access_token"];
+    if (!string.IsNullOrEmpty(jwtToken)) {
+        var handler = new JwtSecurityTokenHandler();
+        try {
+            var jsonToken = handler.ReadToken(jwtToken);
+            var tokenS = jsonToken as JwtSecurityToken;
+
+            var nameClaim = tokenS?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
+            if (nameClaim != null) {
+                username = nameClaim.Value;
+            }
+        } catch (Exception ex) {
+            // Handle exception, perhaps log it
+        }
+    }
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,15 +36,15 @@
 
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="#" class="navbar-logo">Square Circle</a>
+            <a asp-controller="Home" asp-action="Index" class="navbar-logo">Square Circle</a>
             <div class="navbar-buttons"></div>
-                <a href="/path/to/profile-page">
+                <a asp-controller="account" asp-action="profile">
                     <div class="navbar-profile">
                         <img src="~/img/user.png" alt="Profile Picture" class="profile-pic">
-                        <span class="profile-name">MyUsername</span>
+                        <span class="profile-name">@username</span>
                     </div>
                 </a>
-                <button onclick="LogOut()" class="navbar-btn logout">Log out</button>
+                <a asp-controller="account" asp-action="logout" class="navbar-btn logout">Log out</a>
             </div>
         </div>
     </nav>

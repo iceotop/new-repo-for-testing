@@ -1,11 +1,8 @@
-namespace api.Controllers
+namespace mvc.Controllers
 {
-    public partial class ExternalServicesController
+    public class GoogleBooksResponse
     {
-        //------classes to handle response from google books api
-        public class GoogleBooksResponse
-        {
-            public List<GoogleBookItem> Items { get; set; }
-        }
+        public List<GoogleBookItem> Items { get; set; }
     }
+
 }
