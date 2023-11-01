@@ -3,7 +3,7 @@
 @using System.Security.Claims
 
 @{
-    var jwtToken = Context.Request.Cookies["jwtToken"];
+    var jwtToken = Context.Request.Cookies["access_token"];
     if (!string.IsNullOrEmpty(jwtToken)) {
         var handler = new JwtSecurityTokenHandler();
         
@@ -14,7 +14,7 @@
             var roleClaim = tokenS.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
             
             if (roleClaim != null) {
-                bool isAdmin = roleClaim.Value == "Admin"; // You can change this to whatever role you're using for admin
+                bool isAdmin = roleClaim.Value == "User"; // You can change this to whatever role you're using for admin
                 
                 if (isAdmin) {
                     Layout = "_AdminLayout";

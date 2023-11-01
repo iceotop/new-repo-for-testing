@@ -1,10 +1,8 @@
-namespace api.Controllers
+namespace mvc.Controllers
 {
-    public partial class ExternalServicesController
+    public class ImageLinks
     {
-        public class ImageLinks
-        {
-            public string Thumbnail { get; set; }
-        }
+        public string Thumbnail { get; set; }
     }
+
 }

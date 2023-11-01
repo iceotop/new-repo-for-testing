@@ -11,16 +11,15 @@
 </head>
 <body>
 
-    <nav class="navbar">
+     <nav class="navbar">
         <div class="navbar-container">
-            <a href="#" class="navbar-logo">Square Circle</a>
+            <a asp-controller="Home" asp-action="Index" class="navbar-logo">Square Circle</a>
             <div class="navbar-buttons">
-                <button class="navbar-btn login">Log in</button>
-                <button class="navbar-btn register">Register</button>
+                <a asp-controller="Account" asp-action="Login" class="navbar-btn login">Log in</a>
+                <a asp-controller="Account" asp-action="Register" class="navbar-btn register">Register</a>
             </div>
         </div>
     </nav>
-
 
     <main>
         @RenderBody()

@@ -29,10 +29,13 @@ function submitLoginForm() {
   });
 }
 
-function LogOut() {
-  document.cookie = 'jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  location.reload();
-}
+// function LogOut() {
+//   // Remove the jwtToken cookie
+//   document.cookie = 'jwtToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  
+//   // Reload the page or redirect to the index
+//   window.location.href = '/';
+// }
 
 function submitRegistrationForm() {
   const username = document.getElementById('register-username').value;

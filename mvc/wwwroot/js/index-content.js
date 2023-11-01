@@ -1,32 +1,47 @@
 let modalContext = ""; // This will hold either "log" or "circle"
 
 document.addEventListener("DOMContentLoaded", function() {
-    const jwtToken = getCookie("jwtToken");
+  //
+  const jwtToken = getCookie("jwtToken");
 
-    if (jwtToken) {
-      createButtons();
-    }
+  if (jwtToken) {
+    createButtons();
+    populateProfileButtonUserName();
+  }
 
-      // Close button for modal1
-    const closeModal1 = document.getElementById("closeModal1");
+  // Close button for modal1
+  const closeModal1 = document.getElementById("closeModal1");
+  if (closeModal1) {
     closeModal1.addEventListener("click", () => {
       hideModal("modal1");
-
     });
+  }
 
-    // Close button for modal2
-    const closeModal2 = document.getElementById("closeModal2");
+  // Close button for modal2
+  const closeModal2 = document.getElementById("closeModal2");
+  if (closeModal2) {
     closeModal2.addEventListener("click", () => {
       hideModal("modal2");
     });
+  }
 
-    // Login and register buttons for opening modals
-    document.querySelector('.login').addEventListener('click', () => openModal('loginModal'));
-    document.querySelector('.register').addEventListener('click', () => openModal('registerModal'));
+  // Login and register buttons for opening modals
+  const loginButton = document.querySelector('.login');
+  const registerButton = document.querySelector('.register');
 
-    const searchForm = document.getElementById("search-form");
-    const searchInput = document.getElementById("search-input");
+  if (loginButton) {
+    loginButton.addEventListener('click', () => openModal('loginModal'));
+  }
 
+  if (registerButton) {
+    registerButton.addEventListener('click', () => openModal('registerModal'));
+  }
+
+  // Handling for search bar inputs by users
+  const searchForm = document.getElementById("search-form");
+  const searchInput = document.getElementById("search-input");
+
+  if (searchForm && searchInput) {
     searchForm.addEventListener("submit", event => {
         event.preventDefault(); // Prevent the default form submission behavior
 
@@ -36,13 +51,70 @@ document.addEventListener("DOMContentLoaded", function() {
             fetchBooks(searchQuery);  // Fetch books based on the query
         }
     });
+  }
 });
 
-// Function to fetch the JWT cookie
+
+// Function to get a cookie by its name
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+// Function to decode the token
+function decodeJWT(jwtToken) {
+  try {
+    const payload = jwtToken.split('.')[1];
+    const base64 = payload.replace('-', '+').replace('_', '/');
+    const decoded = JSON.parse(atob(base64));
+    return decoded;
+  } catch (e) {
+    console.error('Invalid token:', e);
+    return null;
+  }
+}
+
+// Function to add Username to Profile-button when logged in
+function populateProfileButtonUserName() {
+  // Get the token from the cookie
+  const token = getCookie("jwtToken"); 
+
+  // Decode the token
+  const decoded = decodeJWT(token);
+
+  // Extract the username from the decoded token using the fully qualified claim type
+  if (decoded && decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']) {
+    const userName = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'];
+  
+    // Get the profileButtonUserName element and set its text content
+    const profileButtonUserName = document.querySelector(".profile-name");
+    if (profileButtonUserName) {
+      profileButtonUserName.textContent = userName;
+    }
+  } else {
+    console.error('Username not found in token or token is invalid');
+  }
+}
+
+
+// Function to redirect to profile page on btn-click in HTML
+function GetProfilePage() {
+  // Get the token from the cookie
+  const token = getCookie("jwtToken"); 
+
+  // Decode the token
+  const decoded = decodeJWT(token);
+
+  // Extract email from the decoded token using the fully qualified claim type
+  if (decoded && decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress']) {
+    const email = decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
+
+    // Redirect to the profile page
+    window.location.href = `/account/details/${email}`;
+  } else {
+    console.error('Email not found in token or token is invalid');
+  }
 }
 
 // Function to create the 'Log book' and 'Create Book circle' buttons
@@ -53,7 +125,10 @@ function createButtons() {
   logBookButton.className = "log-book-button";
 
   // Append the 'Log book' button to the bookReviewContainer
-  document.getElementById("bookReviewContainer").appendChild(logBookButton);
+  const bookReviewContainer = document.getElementById("bookReviewContainer");
+  if (bookReviewContainer) {
+    bookReviewContainer.appendChild(logBookButton);
+  }
 
   // Create and style the 'Create Book circle' button
   const createCircleButton = document.createElement("button");
@@ -61,17 +136,24 @@ function createButtons() {
   createCircleButton.className = "create-circle-button";
 
   // Append the 'Create Book circle' button to the bookCircleContainer
-  document.getElementById("bookCircleContainer").appendChild(createCircleButton);
+  const bookCircleContainer = document.getElementById("bookCircleContainer");
+  if (bookCircleContainer) {
+    bookCircleContainer.appendChild(createCircleButton);
+  }
 
   // Add click event to the 'Log book' button to show the first modal
-  logBookButton.addEventListener("click", () => {
-    showModal('modal1');
-  });
+  if (logBookButton) {
+    logBookButton.addEventListener("click", () => {
+      showModal('modal1');
+    });
+  }
 
   // Add click event to the 'Create Book circle' button
-  createCircleButton.addEventListener("click", () => {
-    showModal('modal1');
-  });
+  if (createCircleButton) {
+    createCircleButton.addEventListener("click", () => {
+      showModal('modal1');
+    });
+  }
 }
 
 // Function to fetch book data from your API

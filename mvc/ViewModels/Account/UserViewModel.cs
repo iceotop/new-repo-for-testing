@@ -1,7 +1,11 @@
 namespace mvc.ViewModels.Account;
+using System.Text.Json.Serialization;
 
 public class UserViewModel
 {
-    public string email { get; set; }
-    public string token { get; set; }
+    [JsonPropertyName("email")]
+    public string Email { get; set; }
+
+    [JsonPropertyName("token")]
+    public string Token { get; set; }
 }

@@ -1,10 +1,9 @@
-namespace api.Controllers
+namespace mvc.Controllers
 {
-    public partial class ExternalServicesController
+    public class GoogleBookItem
     {
-        public class GoogleBookItem
-        {
-            public VolumeInfo VolumeInfo { get; set; }
-        }
+        public string Id { get; set; }
+        public VolumeInfo VolumeInfo { get; set; }
     }
+
 }
