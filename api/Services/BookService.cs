@@ -1,10 +1,13 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Repositories;
 
 namespace Services;
 
-public class BookService : IBookService
+public class BookService : BaseService, IBookService
 {
     private readonly DatabaseConnection _databaseConnection;
     public BookService(DatabaseConnection databaseConnection)
@@ -24,9 +27,37 @@ public class BookService : IBookService
         }
     }
 
+    // public async Task<Book?> FindByIdAsync(string id)
+    // {
+    //     return await _databaseConnection.Books.FindAsync(id);
+    // }
+
     public async Task<Book?> FindByIdAsync(string id)
     {
-        return await _databaseConnection.Books.FindAsync(id);
+        var cacheKey = $"book:{id}";
+
+        var cachedBook = redisDatabase.StringGet(cacheKey);
+
+        if (cachedBook.HasValue)
+        {
+            return JsonSerializer.Deserialize<Book>(cachedBook);
+        }
+
+        // simulera långsam laddning för att dema cachning
+        await Task.Delay(2000);
+
+        // var database = new DatabaseConnection();
+
+        var book = await _databaseConnection.Books.FirstOrDefaultAsync(c => c.Id == id);
+
+        if (book is not null)
+        {
+            redisDatabase.StringSet(cacheKey, JsonSerializer.Serialize(book), TimeSpan.FromHours(1));
+        }
+
+        return book;
+
+        // return await _databaseConnection.Books.FindAsync(id);
     }
 
     public async Task<IList<Book>> ListAllAsync()

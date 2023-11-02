@@ -35,7 +35,7 @@ public class BookController : ControllerBase
 
     // Hämta enskild bok på ID
     [HttpGet("{id}")]
-    [Authorize(Roles = "User")]
+    // [Authorize(Roles = "User")]
     // [Authorize(Roles = "User, Admin")] - Om man vill lägga till flera roller
     public async Task<ActionResult> GetById(string id)
     {
@@ -46,7 +46,7 @@ public class BookController : ControllerBase
             return NotFound($"Boken med ID {id} kunde inte hittas");
         }
 
-         var book = new
+        var book = new
         {
             Id = result.Id,
             Title = result.Title,
@@ -59,7 +59,7 @@ public class BookController : ControllerBase
         return Ok(book);
     }
 
-     // Add a new book
+    // Add a new book
     [HttpPost()]
     // [Authorize(Roles = "User")]
     public async Task<ActionResult> Create(BookBaseViewModel model)
@@ -164,7 +164,7 @@ public class BookController : ControllerBase
 
         // Update the user in the database
         await _userService.UpdateAsync(user);
-        
+
 
         // Save changes
         if (await _userService.SaveAsync())
