@@ -1,8 +1,6 @@
-namespace mvc.Controllers
-{
-    public class GoogleBooksResponse
-    {
-        public List<GoogleBookItem> Items { get; set; }
-    }
+namespace Models;
 
+public class GoogleBooksResponse
+{
+    public List<GoogleBookItem> Items { get; set; }
 }

@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using api.Data;
 using api.Interfaces;
-using api.Services;
 using api.ViewModels;
 using api.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;

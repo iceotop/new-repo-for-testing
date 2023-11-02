@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using api.Models.DTOs;
 using api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

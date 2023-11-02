@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using mvc.Controllers;
-using static api.Models.DTOs.ExternalServicesController;
+using Models;
+using static Models.ExternalServicesController;
 
 namespace api.Controllers
 {
