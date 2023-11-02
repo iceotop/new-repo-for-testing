@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.PortableExecutable;
 
-namespace api.Models;
+namespace Models;
 public class Event
 {
     [Key]

@@ -1,7 +1,7 @@
-using api.Models;
+using Models;
 
-namespace api.Interfaces;
-public interface IBookRepository
+namespace Services;
+public interface IBookService
 {
     Task<IList<Book>> ListAllAsync();
     Task<Book?> FindByIdAsync(string id);

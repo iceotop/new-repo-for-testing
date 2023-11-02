@@ -1,6 +1,7 @@
 using System.Text.Json;
-using api.Models;
 using Microsoft.AspNetCore.Identity;
+using Models;
+using Repositories;
 
 namespace api.Data;
 public static class SeedData
@@ -44,14 +45,14 @@ public static class SeedData
             await userManager.AddToRoleAsync(user, "User");
         }
     }
-    public static async Task LoadBooksData(BookCircleContext context)
+    public static async Task LoadBooksData(DatabaseConnection databaseConnection)
     {
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         };
 
-        if (context.Books.Any()) return;
+        if (databaseConnection.Books.Any()) return;
 
         var json = File.ReadAllText("Data/json/books.json");
 
@@ -59,18 +60,18 @@ public static class SeedData
 
         if (books is not null && books.Count > 0)
         {
-            await context.Books.AddRangeAsync(books);
-            await context.SaveChangesAsync();
+            await databaseConnection.Books.AddRangeAsync(books);
+            await databaseConnection.SaveChangesAsync();
         }
     }
-    public static async Task LoadEventsData(BookCircleContext context)
+    public static async Task LoadEventsData(DatabaseConnection databaseConnection)
     {
         var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         };
 
-        if (context.Events.Any()) return;
+        if (databaseConnection.Events.Any()) return;
 
         var json = File.ReadAllText("Data/json/events.json");
 
@@ -78,8 +79,8 @@ public static class SeedData
 
         if (events is not null && events.Count > 0)
         {
-            await context.Events.AddRangeAsync(events);
-            await context.SaveChangesAsync();
+            await databaseConnection.Events.AddRangeAsync(events);
+            await databaseConnection.SaveChangesAsync();
         }
 
     }

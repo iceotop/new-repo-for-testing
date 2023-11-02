@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace api.Models;
+namespace Models;
 public class UserModel : IdentityUser
 {
     public string? FirstName { get; set; }

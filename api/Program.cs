@@ -1,13 +1,14 @@
 using System.Text;
 using api.Data;
 using api.Interfaces;
-using api.Models;
-using api.Repository;
-using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.IdentityModel.Tokens;
+using Models;
+using Repositories;
+using Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,19 +33,19 @@ builder.Services.AddHttpClient("GoogleBooks", c =>
     });
 
 // Configurate database - Sqlite
-builder.Services.AddDbContext<BookCircleContext>(
+builder.Services.AddDbContext<DatabaseConnection>(
     options => options.UseSqlite(builder.Configuration.GetConnectionString("Sqlite"))
 );
 
 // Add dependency injection
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddScoped<IEventRepository, EventRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 // Setup av JWT
 builder.Services.AddIdentityCore<UserModel>()
 .AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<BookCircleContext>();
+.AddEntityFrameworkStores<DatabaseConnection>();
 builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddControllers();
@@ -78,7 +79,7 @@ var services = scope.ServiceProvider;
 
 try
 {
-    var context = services.GetRequiredService<BookCircleContext>();
+    var context = services.GetRequiredService<DatabaseConnection>();
     var userMgr = services.GetRequiredService<UserManager<UserModel>>();
     var roleMgr = services.GetRequiredService<RoleManager<IdentityRole>>();
 

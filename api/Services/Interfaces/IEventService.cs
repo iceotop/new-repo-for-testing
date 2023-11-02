@@ -1,7 +1,8 @@
-using api.Models;
 
-namespace api.Interfaces;
-public interface IEventRepository
+using Models;
+
+namespace Services;
+public interface IEventService
 {
     Task<IList<Event>> ListAllAsync();
     Task<Event?> FindByIdAsync(string id);

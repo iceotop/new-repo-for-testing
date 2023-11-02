@@ -1,22 +1,21 @@
-using api.Data;
-using api.Interfaces;
-using api.Models;
 using Microsoft.EntityFrameworkCore;
+using Models;
+using Repositories;
 
-namespace api.Repository;
-public class BookRepository : IBookRepository
+namespace Services;
+
+public class BookService : IBookService
 {
-    private readonly BookCircleContext _context;
-    public BookRepository(BookCircleContext context)
+    private readonly DatabaseConnection _databaseConnection;
+    public BookService(DatabaseConnection databaseConnection)
     {
-        _context = context;
+        _databaseConnection = databaseConnection;
     }
-
     public async Task<bool> AddAsync(Book book)
     {
         try
         {
-            await _context.Books.AddAsync(book);
+            await _databaseConnection.Books.AddAsync(book);
             return true;
         }
         catch
@@ -27,19 +26,19 @@ public class BookRepository : IBookRepository
 
     public async Task<Book?> FindByIdAsync(string id)
     {
-        return await _context.Books.FindAsync(id);
+        return await _databaseConnection.Books.FindAsync(id);
     }
 
     public async Task<IList<Book>> ListAllAsync()
     {
-        return await _context.Books.ToListAsync();
+        return await _databaseConnection.Books.ToListAsync();
     }
 
     public Task<bool> UpdateAsync(Book book)
     {
         try
         {
-            _context.Books.Update(book);
+            _databaseConnection.Books.Update(book);
             return Task.FromResult(true);
         }
         catch
@@ -52,7 +51,7 @@ public class BookRepository : IBookRepository
     {
         try
         {
-            if (await _context.SaveChangesAsync() > 0) return true;
+            if (await _databaseConnection.SaveChangesAsync() > 0) return true;
             return false;
         }
         catch
@@ -65,7 +64,7 @@ public class BookRepository : IBookRepository
     {
         try
         {
-            _context.Books.Remove(book);
+            _databaseConnection.Books.Remove(book);
             return Task.FromResult(true);
         }
         catch
