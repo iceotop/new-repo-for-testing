@@ -38,9 +38,6 @@ public class BookService : BaseService, IBookService
             return JsonSerializer.Deserialize<Book>(cachedBook);
         }
 
-        // simulera långsam laddning för att dema cachning
-        // await Task.Delay(2000);
-
         var book = await _databaseConnection.Books.FirstOrDefaultAsync(c => c.Id == id);
 
         if (book is not null)
@@ -49,8 +46,6 @@ public class BookService : BaseService, IBookService
         }
 
         return book;
-
-        // return await _databaseConnection.Books.FindAsync(id);
     }
 
     public async Task<IList<Book>> ListAllAsync()
