@@ -27,11 +27,6 @@ public class BookService : BaseService, IBookService
         }
     }
 
-    // public async Task<Book?> FindByIdAsync(string id)
-    // {
-    //     return await _databaseConnection.Books.FindAsync(id);
-    // }
-
     public async Task<Book?> FindByIdAsync(string id)
     {
         var cacheKey = $"book:{id}";
@@ -44,9 +39,7 @@ public class BookService : BaseService, IBookService
         }
 
         // simulera långsam laddning för att dema cachning
-        await Task.Delay(2000);
-
-        // var database = new DatabaseConnection();
+        // await Task.Delay(2000);
 
         var book = await _databaseConnection.Books.FirstOrDefaultAsync(c => c.Id == id);
 
@@ -70,6 +63,11 @@ public class BookService : BaseService, IBookService
         try
         {
             _databaseConnection.Books.Update(book);
+
+            var cacheKey = $"book:{book.Id}";
+
+            redisDatabase.StringSet(cacheKey, JsonSerializer.Serialize(book), TimeSpan.FromHours(1));
+
             return Task.FromResult(true);
         }
         catch
