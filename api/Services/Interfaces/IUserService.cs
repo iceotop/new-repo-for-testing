@@ -1,7 +1,7 @@
 using Models;
 
-namespace api.Interfaces;
-public interface IUserRepository
+namespace Services;
+public interface IUserService
 {
     Task<IList<UserModel>> ListAllAsync();
     Task<UserModel?> FindByIdAsync(string id);

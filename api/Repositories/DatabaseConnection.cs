@@ -6,12 +6,8 @@ namespace Repositories;
 
 public class DatabaseConnection : IdentityDbContext<UserModel>
 {
-    private const string CONNECTION_STRING = "Data Source=bookCircle.db";
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    public DatabaseConnection(DbContextOptions options) : base(options)
     {
-        optionsBuilder.UseSqlite(CONNECTION_STRING);
-
-        base.OnConfiguring(optionsBuilder);
     }
     public DbSet<Book> Books { get; set; }
     public DbSet<Event> Events { get; set; }

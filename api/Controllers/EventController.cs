@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Services;
 
 
 namespace Api.Controllers;
@@ -13,26 +14,26 @@ namespace Api.Controllers;
 [ApiController]
 public class EventController : ControllerBase
 {
-    private readonly IEventRepository _eventRepo;
-    private readonly IUserRepository _userRepo;
-    public EventController(IEventRepository eventRepo, IUserRepository userRepo)
+    private readonly IEventService _eventService;
+    private readonly IUserService _userService;
+    public EventController(IEventService eventService, IUserService userService)
     {
-        _userRepo = userRepo;
-        _eventRepo = eventRepo;
+        _userService = userService;
+        _eventService = eventService;
     }
 
     // TODO Här skulle vi behöva fixa en ViewModel 
     [HttpGet]
     public async Task<ActionResult<List<Event>>> Get()
     {
-        return Ok(await _eventRepo.ListAllAsync());
+        return Ok(await _eventService.ListAllAsync());
     }
 
     [HttpGet("{id}")]
     // [Authorize(Roles = "User")]
     public async Task<ActionResult<Event>> GetById(string id)
     {
-        var result = await _eventRepo.FindByIdAsync(id);
+        var result = await _eventService.FindByIdAsync(id);
 
         var bookEvent = new EventBaseViewModel
         {
@@ -68,9 +69,9 @@ public class EventController : ControllerBase
             EndDate = newEvent.EndDate,
         };
 
-        await _eventRepo.AddAsync(bookEvent);
+        await _eventService.AddAsync(bookEvent);
 
-        if (await _eventRepo.SaveAsync())
+        if (await _eventService.SaveAsync())
         {
             return Created(nameof(GetById), new { id = bookEvent.Id });
         }
@@ -81,7 +82,7 @@ public class EventController : ControllerBase
     // [Authorize(Roles = "User")]
     public async Task<ActionResult<List<Event>>> Update(Event request)
     {
-        var bookEvent = await _eventRepo.FindByIdAsync(request.Id);
+        var bookEvent = await _eventService.FindByIdAsync(request.Id);
         if (bookEvent == null)
             return BadRequest("Event not found.");
 
@@ -92,23 +93,23 @@ public class EventController : ControllerBase
         bookEvent.EndDate = request.EndDate;
 
 
-        await _eventRepo.SaveAsync();
+        await _eventService.SaveAsync();
 
-        return Ok(await _eventRepo.ListAllAsync());
+        return Ok(await _eventService.ListAllAsync());
     }
 
     [HttpDelete("{id}")]
     // [Authorize(Roles = "Admin")]
     public async Task<ActionResult<List<Event>>> Delete(string id)
     {
-        var bookEvent = await _eventRepo.FindByIdAsync(id);
+        var bookEvent = await _eventService.FindByIdAsync(id);
         if (bookEvent == null)
             return BadRequest("Event not found.");
 
-        await _eventRepo.DeleteAsync(bookEvent);
-        await _eventRepo.SaveAsync();
+        await _eventService.DeleteAsync(bookEvent);
+        await _eventService.SaveAsync();
 
-        return Ok(await _eventRepo.ListAllAsync());
+        return Ok(await _eventService.ListAllAsync());
     }
 
     // Gör om till ViewModel
@@ -127,16 +128,16 @@ public class EventController : ControllerBase
     [HttpPatch("join/{eventId}/{userId}")]
     public async Task<IActionResult> Join(string eventId, string userId)
     {
-        var e = await _eventRepo.FindByIdAsync(eventId);
+        var e = await _eventService.FindByIdAsync(eventId);
         if (e is null) return NotFound($"Bokcirkel med ID {eventId} kunde inte hittas");
 
-        var user = await _userRepo.FindByIdAsync(userId);
+        var user = await _userService.FindByIdAsync(userId);
         if (user is null) return NotFound($"Användare med ID {userId} kunde inte hittas");
 
         user.Events.Add(e);
-        await _userRepo.UpdateAsync(user);
+        await _userService.UpdateAsync(user);
 
-        if (await _userRepo.SaveAsync())
+        if (await _userService.SaveAsync())
         {
             return NoContent();
         }

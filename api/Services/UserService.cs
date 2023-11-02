@@ -1,10 +1,11 @@
+using api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Repositories;
 
 namespace Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly DatabaseConnection _databaseConnection;
         public UserService(DatabaseConnection databaseConnection)

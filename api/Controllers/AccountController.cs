@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Services;
 using SQLitePCL;
 
 namespace api.Controllers;
@@ -17,11 +18,11 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<UserModel> _userManager;
     private readonly TokenService _tokenService;
-    private readonly IUserRepository _userRepo;
+    private readonly IUserService _userService;
 
-    public AccountController(UserManager<UserModel> userManager, TokenService tokenService, IUserRepository userRepo)
+    public AccountController(UserManager<UserModel> userManager, TokenService tokenService, IUserService userService)
     {
-        _userRepo = userRepo;
+        _userService = userService;
         _tokenService = tokenService;
         _userManager = userManager;
     }
@@ -76,7 +77,7 @@ public class AccountController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(string id)
     {
-        var result = await _userRepo.FindByIdAsync(id);
+        var result = await _userService.FindByIdAsync(id);
 
         var user = new ProfileViewModel
         {
@@ -112,7 +113,7 @@ public class AccountController : ControllerBase
         var emailClaim = User.FindFirst(claim => claim.Type == ClaimTypes.Email);
         string email = emailClaim.Value;
 
-        var result = await _userRepo.FindByEmailAsync(email);
+        var result = await _userService.FindByEmailAsync(email);
 
         var user = new ProfileViewModel
         {

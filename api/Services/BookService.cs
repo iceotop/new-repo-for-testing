@@ -4,7 +4,7 @@ using Repositories;
 
 namespace Services;
 
-public class BookService
+public class BookService : IBookService
 {
     private readonly DatabaseConnection _databaseConnection;
     public BookService(DatabaseConnection databaseConnection)
